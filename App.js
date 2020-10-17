@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import Home from './screens/Home.js';
+import HomeStack from './routes/HomeStack'
 
 export default function App() {
   return (
@@ -14,7 +15,7 @@ export default function App() {
       end={{ x: 0, y: 1.2 }}
       style={styles.container}
     >
-      <Home />
+      <HomeStack />
     </LinearGradient>
   );
 }

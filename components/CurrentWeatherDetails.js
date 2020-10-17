@@ -34,6 +34,7 @@ export default function CurrentWeatherDetails() {
                     data={DATA}
                     renderItem={TimelyWeatherDetails}
                     horizontal
+                    showsHorizontalScrollIndicator={false}
                 />
             </DetailsCard>
         </View>
@@ -46,10 +47,10 @@ export default function CurrentWeatherDetails() {
                     name="weather-night-partly-cloudy"
                     size={60} color="white"
                 />
-                <Text style={styles.temperature__text}>27°</Text>
+                <Text style={styles.temperature__text}>28°</Text>
             </View>
             <Text style={[styles.moreDetails__feels, { color: 'darkgrey' }]}>33°/25° Feels like 31°</Text>
-            <Text style={[styles.moreDetails__feels, { color: 'white' }]}>Partly Cloudy</Text>
+            <Text style={[styles.moreDetails__feels, { color: 'white' }]}>Haze</Text>
 
             <View style={{ marginTop: '8%' }}>
                 <Text style={{ color: 'white', fontSize: 16, alignSelf: 'flex-end', marginHorizontal: '9%', marginBottom: 5 }}>Yesterday: 33°/26°</Text>
@@ -72,25 +73,25 @@ export default function CurrentWeatherDetails() {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        paddingVertical: 10,
+        paddingVertical: '2.5%',//10,
         alignItems: 'center',
         justifyContent: 'space-between',
     },
     temperature__container: {
         width: '60%',
-        paddingTop: 20,
-        paddingBottom: 0,
+        paddingTop: '4.5%',//18,
+        paddingBottom: '1%',
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center',
     },
     temperature__text: {
         color: 'white',
-        fontSize: 95,
+        fontSize: 93,
     },
     moreDetails__feels: {
         fontSize: 20,
-        marginBottom: 15,
+        marginBottom: '2%',
     },
     someMoreDetails__container: {
         flexGrow: 0.5,

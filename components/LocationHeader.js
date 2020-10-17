@@ -15,12 +15,12 @@ export default function LocationHeader() {
 
 const styles = StyleSheet.create({
     header: {
-        marginTop: '2%',
+        marginTop: '3%',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'baseline',
         width: '100%',
-        paddingVertical: '5%',
+        paddingVertical: '4%',
     },
     icon: {
         marginHorizontal: 7,
