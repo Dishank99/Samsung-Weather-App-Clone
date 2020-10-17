@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.25)',
         // opacity: 0.3,
         paddingVertical: '8%',
-        paddingHorizontal: '10%',
+        paddingHorizontal: '7%',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 
-export default function TimelyWeatherDetail({ item }) {
+export default function TimelyWeatherDetails({ item }) {
     return (
         <View style={styles.container}>
             <Text style={{ color: 'white', fontSize: 18 }} >12:30 am</Text>
@@ -12,7 +12,6 @@ export default function TimelyWeatherDetail({ item }) {
                 size={30} color="white"
                 style={{ marginVertical: 15 }}
             />
-
             <View>
                 <Text style={{ color: 'white', fontSize: 16 }} >27°</Text>
             </View>

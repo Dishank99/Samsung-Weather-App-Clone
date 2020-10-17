@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import DetailsCard from './DetailsCard';
@@ -26,6 +26,19 @@ export default function CurrentWeatherDetails() {
         </View>
     )
 
+    const DetailsBlock = () => (
+        <View style={{ marginTop: '1.5%' }}>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 15, marginHorizontal: '5%', marginVertical: '2%' }}>Hourly</Text>
+            <DetailsCard>
+                <FlatList
+                    data={DATA}
+                    renderItem={TimelyWeatherDetails}
+                    horizontal
+                />
+            </DetailsCard>
+        </View>
+    )
+
     return (
         <View style={styles.container} >
             <View style={styles.temperature__container}>
@@ -46,21 +59,11 @@ export default function CurrentWeatherDetails() {
                 </DetailsCard>
             </View>
 
-            <View style={{ marginTop: 10 }}>
-
-                <DetailsCard>
-
-                    <FlatList
-                        data={DATA}
-                        renderItem={TimelyWeatherDetails}
-                        horizontal
-                    />
+            <DetailsBlock />
+            <DetailsBlock />
+            <DetailsBlock />
 
 
-
-
-                </DetailsCard>
-            </View>
 
         </View>
     );
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
     },
     someMoreDetails__container: {
         flexGrow: 0.5,
-        paddingVertical: 5,
+        paddingVertical: 0,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',

@@ -23,11 +23,9 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
         paddingHorizontal: 25,
-        paddingTop: StatusBar.currentHeight,
-        height: '9%',
+        height: StatusBar.currentHeight + 35,
+        // height: '9%',
         width: '100%',
-
-
     },
     icon: {
         marginLeft: 20,

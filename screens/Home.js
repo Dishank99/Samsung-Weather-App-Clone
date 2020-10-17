@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import Header from '../components/Header'
 import LocationHeader from '../components/LocationHeader'
 import CurrentWeatherDetails from '../components/CurrentWeatherDetails'
@@ -9,7 +9,11 @@ export default function Home() {
         <View style={styles.home}>
             <Header />
             <LocationHeader />
-            <CurrentWeatherDetails />
+
+            <ScrollView style={{ width: '100%' }}>
+                <CurrentWeatherDetails />
+            </ScrollView>
+
         </View>
     );
 }
