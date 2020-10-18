@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import Header from '../components/Header'
 import LocationHeader from '../components/LocationHeader'
 import CurrentWeatherDetails from '../components/CurrentWeatherDetails'
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function Home(props) {
     const [visible, setVisible] = useState()
@@ -27,8 +28,12 @@ export default function Home(props) {
                 onPressLocation={() => props.navigation.push('Locations')}
                 onPressSearch={() => props.navigation.push('Search')}
             />
-
-            <LocationHeader />
+            <View style={styles.header}>
+                <MaterialIcons name="location-on" size={20} color="white" style={styles.icon} />
+                <Text style={styles.title}>
+                    Dombivli
+            </Text>
+            </View>
             <Text style={
                 [
                     { color: 'darkgrey', zIndex: 3, fontSize: 18 },
@@ -49,5 +54,21 @@ const styles = StyleSheet.create({
     home: {
         flex: 1,
         alignItems: 'center',
-    }
+    },
+    header: {
+        marginTop: '3%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'baseline',
+        width: '100%',
+        paddingVertical: '4%',
+    },
+    icon: {
+        marginHorizontal: 7,
+    },
+    title: {
+        fontSize: 20,
+        color: 'white',
+        paddingTop: 5,
+    },
 })

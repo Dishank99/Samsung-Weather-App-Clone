@@ -12,6 +12,7 @@ export default function TimelyWeatherDetails({ item }) {
                 size={30} color="white"
                 style={{ marginVertical: 15 }}
             />
+            {/* <Text style={{ color: 'white', fontSize: 10, marginVertical: '5%' }} >5%</Text> */}
             <View>
                 <Text style={{ color: 'white', fontSize: 16 }} >27°</Text>
             </View>
