@@ -1,0 +1,2 @@
+[.] complete design of search screen
+[] implement storing of cities if not already stored, if already stored then show details on home screen

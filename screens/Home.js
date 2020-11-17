@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
 import Header from '../components/Header'
 import LocationHeader from '../components/LocationHeader'
 import CurrentWeatherDetails from '../components/CurrentWeatherDetails'
+import Location from '../services/locationService'
+import weatherDataForCoords from '../services/weatherService'
+import AsyncStorage from '../services/asyncStorageService'
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function Home(props) {
+import { useCoordsData } from '../context/CoordsData'
+
+export default function Home({navigation}) {
+
     const [visible, setVisible] = useState()
 
     const handleScroll = (e) => {
@@ -20,31 +26,27 @@ export default function Home(props) {
         !offset.y && setVisible()
     }
 
-    // useEffect((),[])
-
     return (
         <View style={styles.home}>
             <Header
-                onPressLocation={() => props.navigation.push('Locations')}
-                onPressSearch={() => props.navigation.push('Search')}
+                onPressLocation={() => navigation.push('Locations')}
+                onPressSearch={() => navigation.push('Search')}
             />
-            <View style={styles.header}>
-                <MaterialIcons name="location-on" size={20} color="white" style={styles.icon} />
-                <Text style={styles.title}>
-                    Dombivli
-            </Text>
-            </View>
+            
+            <LocationHeader city='Dombivli'/>
             <Text style={
                 [
                     { color: 'darkgrey', zIndex: 3, fontSize: 18 },
                     visible === 'none' ? { display: 'none' } : { display: 'flex' }
+                    // { display: 'flex' }
                 ]
-            } > Sat 17 October 7:12 pm </Text>
+            } > Mon17 Nov 2020 7:43 PM </Text>
             <ScrollView style={{ width: '100%' }} showsVerticalScrollIndicator={false}
                 onScrollBeginDrag={() => setVisible('none')}
                 onScrollEndDrag={handleScroll}>
                 <CurrentWeatherDetails />
             </ScrollView>
+            
 
         </View>
     );

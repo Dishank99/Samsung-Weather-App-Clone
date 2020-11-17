@@ -2,12 +2,13 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function LocationHeader() {
+export default function LocationHeader({permissionGiven, city}) {
+    const iconString = permissionGiven?'location-on':'location-off'
     return (
         <View style={styles.header}>
-            <MaterialIcons name="location-on" size={20} color="white" style={styles.icon} />
+            <MaterialIcons name={iconString} size={20} color="white" style={styles.icon} />
             <Text style={styles.title}>
-                Dombivli
+                {city}
             </Text>
         </View>
     );

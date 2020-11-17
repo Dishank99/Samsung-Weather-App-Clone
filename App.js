@@ -7,6 +7,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Home from './screens/Home.js';
 import HomeStack from './routes/HomeStack'
 
+import CoordsDataProvider from './context/CoordsData'
+
 export default function App() {
   return (
     <LinearGradient
@@ -15,7 +17,9 @@ export default function App() {
       end={{ x: 0, y: 1.2 }}
       style={styles.container}
     >
-      <HomeStack />
+      <CoordsDataProvider>
+        <HomeStack />
+      </CoordsDataProvider>
     </LinearGradient>
   );
 }

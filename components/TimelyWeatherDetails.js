@@ -4,9 +4,16 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 
 export default function TimelyWeatherDetails({ item }) {
+    let temp = ''
+    if(item.temp instanceof Array){
+        console.log('reacher here')
+        temp = `${item.temp[0]}°/${item.temp[1]}°`
+    }
+    else
+        temp = item.temp + '°'
     return (
         <View style={styles.container}>
-            <Text style={{ color: 'white', fontSize: 18 }} >12:30 am</Text>
+            <Text style={{ color: 'white', fontSize: 18 }} >{item.dateTimeString}</Text>
             <MaterialCommunityIcons
                 name="weather-night-partly-cloudy"
                 size={30} color="white"
@@ -14,7 +21,7 @@ export default function TimelyWeatherDetails({ item }) {
             />
             {/* <Text style={{ color: 'white', fontSize: 10, marginVertical: '5%' }} >5%</Text> */}
             <View>
-                <Text style={{ color: 'white', fontSize: 16 }} >27°</Text>
+                <Text style={{ color: 'white', fontSize: 16 }} >{temp}</Text>
             </View>
         </View>
     );

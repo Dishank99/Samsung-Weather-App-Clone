@@ -5,7 +5,7 @@ import { createAppContainer } from 'react-navigation'
 
 import Home from '../screens/Home'
 import Locations, { LocationScreenHeader } from '../screens/Locations'
-import Search from '../screens/Search'
+import Search, { SearchScreenHeader } from '../screens/Search'
 
 const Screens = {
     Home: {
@@ -26,7 +26,14 @@ const Screens = {
 
     },
     Search: {
-        screen: Search
+        screen: Search,
+        navigationOptions:{headerShown:false}
+        // navigationOptions: ({ navigation }) => {
+        //     return {
+        //         header: () => <SearchScreenHeader navigation={navigation} />
+        //     }
+        // }
+
     }
 }
 

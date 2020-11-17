@@ -1,19 +1,19 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import DetailsCard from './DetailsCard';
 import TimelyWeatherDetails from './TimelyWeatherDetails'
 
-export default function CurrentWeatherDetails() {
+export default function CurrentWeatherDetails(props) {
 
     const DATA = [
-        { time: '12:30am', percent: '5', temp: '27', key: '1' },
-        { time: '12:30am', percent: '5', temp: '27', key: '2' },
-        { time: '12:30am', percent: '5', temp: '27', key: '3' },
-        { time: '12:30am', percent: '5', temp: '27', key: '4' },
-        { time: '12:30am', percent: '5', temp: '27', key: '5' },
-        { time: '12:30am', percent: '5', temp: '27', key: '6' },
+        { dateTimeString: '12:30am', percent: '5', temp: '27', key: '1' },
+        { dateTimeString: '12:30am', percent: '5', temp: '27', key: '2' },
+        { dateTimeString: '12:30am', percent: '5', temp: '27', key: '3' },
+        { dateTimeString: '12:30am', percent: '5', temp: '27', key: '4' },
+        { dateTimeString: '12:30am', percent: '5', temp: '27', key: '5' },
+        { dateTimeString: '12:30am', percent: '5', temp: '27', key: '6' },
     ]
 
     const SomeMoreDetails = ({ seperator, type, value }) => (
@@ -26,12 +26,12 @@ export default function CurrentWeatherDetails() {
         </View>
     )
 
-    const DetailsBlock = () => (
+    const DetailsBlock = (props) => (
         <View style={{ marginTop: '1.5%' }}>
-            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 15, marginHorizontal: '5%', marginVertical: '2%' }}>Hourly</Text>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 15, marginHorizontal: '5%', marginVertical: '2%' }}>{props.type}</Text>
             <DetailsCard>
                 <FlatList
-                    data={DATA}
+                    data={props.data}
                     renderItem={TimelyWeatherDetails}
                     horizontal
                     showsHorizontalScrollIndicator={false}
@@ -40,6 +40,22 @@ export default function CurrentWeatherDetails() {
         </View>
     )
 
+    // const [temp, setTemp] = useState(24)
+    // const [feels_like, setFeels_like] = useState(25)
+    // const [description, setDescription] = useState('Low')
+    // const [precipitation, setPrecipitation] = useState('0%')
+    // const [uvi, setUvi] = useState(0)
+
+    // useState(()=>{
+    //     if(details){
+    //         setTemp(details.currentWeatherData.temp)
+    //         setFeels_like(details.currentWeatherData.feels_like)
+    //         setDescription(details.currentWeatherData.description)
+    //         setPrecipitation(details.currentWeatherData.precipitation)
+    //         setUvi(details.currentWeatherData.uvi)
+    //     }
+    // },[details])
+
     return (
         <View style={styles.container} >
             <View style={styles.temperature__container}>
@@ -47,21 +63,21 @@ export default function CurrentWeatherDetails() {
                     name="weather-night-partly-cloudy"
                     size={60} color="white"
                 />
-                <Text style={styles.temperature__text}>28°</Text>
+                <Text style={styles.temperature__text}>33°</Text>
             </View>
-            <Text style={[styles.moreDetails__feels, { color: 'darkgrey' }]}>33°/25° Feels like 31°</Text>
-            <Text style={[styles.moreDetails__feels, { color: 'white' }]}>Haze</Text>
+            <Text style={[styles.moreDetails__feels, { color: 'darkgrey' }]}>34°/30° Feels like 33°</Text>
+            <Text style={[styles.moreDetails__feels, { color: 'white' }]}>Smoke</Text>
 
             <View style={{ marginTop: '8%' }}>
                 <Text style={{ color: 'white', fontSize: 16, alignSelf: 'flex-end', marginHorizontal: '9%', marginBottom: 5 }}>Yesterday: 33°/26°</Text>
                 <DetailsCard>
-                    <SomeMoreDetails type='Precipitation' value='10%' />
-                    <SomeMoreDetails seperator={true} type='UV Index' value='Low' />
+                    <SomeMoreDetails type='Precipitation' value='1%' />
+                    <SomeMoreDetails seperator={true} type='UV Index' value='0' />
                 </DetailsCard>
             </View>
 
-            <DetailsBlock />
-            <DetailsBlock />
+            <DetailsBlock type = 'Hourly' data = {DATA} />
+            <DetailsBlock type= 'Daily' data = {DATA} />
             <DetailsBlock />
 
 
@@ -88,6 +104,7 @@ const styles = StyleSheet.create({
     temperature__text: {
         color: 'white',
         fontSize: 93,
+        fontWeight:'normal'
     },
     moreDetails__feels: {
         fontSize: 20,
