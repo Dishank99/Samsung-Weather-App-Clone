@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import { View, TextInput, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function SearchInput({navigation, handleSubmitEditting}) {
 
@@ -10,9 +11,15 @@ export default function SearchInput({navigation, handleSubmitEditting}) {
     return (
         <View style={styles.container} >
             <Ionicons name="ios-arrow-back" size={24} color="black" style={styles.icon} onPress={() => navigation.goBack()} />
-            <TextInput placeholder='Search' style={styles.input} value={inputText} onChangeText={text=>setInputText(text)} onSubmitEditing={()=>handleSubmitEditting(inputText)}/>
-            <FontAwesome name="microphone" size={24} color="black" />
-        </View>
+            <TextInput
+                placeholder='Search'
+                style={styles.input}
+                value={inputText}
+                onChangeText={text=>setInputText(text)}
+                onSubmitEditing={()=>handleSubmitEditting(inputText)}
+            />
+            {inputText?<MaterialIcons name="clear" size={24} color="black" onPress={() => setInputText()} />:<FontAwesome name="microphone" size={24} color="black" />}
+            </View>
     )
 }
 
