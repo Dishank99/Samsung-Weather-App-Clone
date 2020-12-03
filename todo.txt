@@ -4,4 +4,4 @@
 [.] add cities list as obj with key and display them in location screen
 [.] fetch current weather data from location
 [.] fix saving data in AsyncStorage issue
-[] fix late rendering of details block
+[.] fix late rendering of details block

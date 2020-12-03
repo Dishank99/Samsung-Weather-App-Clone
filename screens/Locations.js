@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import MenuModal from '../shared/MenuModal'
 import ListItem from '../components/ListItem'
+import RefreshBar from '../components/RefreshBar'
 
 import { useCoordsData } from '../context/CoordsData'
 import LocationService from '../services/locationService'
@@ -18,7 +19,7 @@ export function LocationScreenHeader(props) {
         <View style={styles.header}>
             <Ionicons name="ios-arrow-back" size={24} color="black" style={styles.icon} onPress={() => props.navigation.goBack()} />
             <Text style={{ flexGrow: 2, fontSize: 20 }} >Locations</Text>
-            <Ionicons name="ios-add" size={35} color="black" style={styles.icon} />
+            <Ionicons name="ios-add" size={35} color="black" style={styles.icon} onPress={()=> props.navigation.navigate('Search')} />
             <SimpleLineIcons name="options-vertical" size={16} color="black" style={styles.icon} onPress={() => setMenuVisible(true)} />
             <Modal transparent={true} visible={menuVisible} animationType='fade' presentationStyle='overFullScreen' >
                 <TouchableWithoutFeedback style={{ flex: 1, height: '100%', width: '100%' }} onPress={() => setMenuVisible(false)}>
@@ -34,9 +35,9 @@ export function LocationScreenHeader(props) {
 
 export default function Location() {
     
-    const {citiesList} = useCoordsData()
+    const {citiesDataList} = useCoordsData()
 
-    const [citiesData, setCitiesData] = useState()
+    // const [citiesData, setCitiesData] = useState()
 
     // const computeCitiesData = () => {
     //     citiesList.forEach((cityName)=>{
@@ -64,46 +65,28 @@ export default function Location() {
     //     })
     // }
 
-    const computeDataForCity = async (cityName) => {
-        try {
-            console.log('returning promise for',cityName)
-            const coordsFromCity = await LocationService.getCoordsFromCityName(cityName)
-            console.log('reached here after retreiving locationdata for',cityName)
-            const weatherData = await weatherDataForCoords(coordsFromCity)
-            console.log('reached here after retreiving weatherdata for',cityName)
-            const {temp} = weatherData.currentWeatherData
-            const { temp:maxMintemp, dateTimeString } = weatherData.dailyWeatherData[0]
-            const data = {cityName, dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]}
-            return data
-        }catch(err){throw new Error(err)}
-    }
+    
 
-    const computeCitiesData = async () => {
-        let arrOfResponses = []
-        for(let i=0;i<citiesList.length;i++){
-            const data = await computeDataForCity(citiesList[i])
-            arrOfResponses.push(data)
-        }
-        setCitiesData(arrOfResponses)
-    }
-
-    useEffect(()=>{
-        computeCitiesData()
-    },[])
+    // useEffect(()=>{
+    //     computeCitiesData()
+    // },[])
     
 
     return (
-        <View style={styles.container}>
-            <FlatList
-                data={citiesData}//data
-                renderItem={({item})=><ListItem item={item}/>}
-                ItemSeparatorComponent={() => (
-                    <View style={{ width: '100%', height: '0.5%', backgroundColor: 'grey' }} >
-                    </View>
-                )}
-                keyExtractor={(item)=>item.cityName}
-            />
-
+        <View style={{flex:1}} >
+            <View style={styles.container}>
+                <FlatList
+                    data={citiesDataList}//data
+                    renderItem={({item})=><ListItem item={item}/>}
+                    ItemSeparatorComponent={() => (
+                        <View style={{ width: '100%', height: '0.5%', backgroundColor: 'grey' }} >
+                        </View>
+                    )}
+                    keyExtractor={(item)=>item.cityName}
+                />
+                
+            </View>
+            <RefreshBar/>
         </View>
     )
 }

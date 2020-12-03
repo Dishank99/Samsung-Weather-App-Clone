@@ -123,7 +123,7 @@ export default function Search(props) {
             return weatherDataForCoords(coords)
         })
         .then(data=>{
-            const {dateTimeString, temp} = data.currentWeatherData
+            const { dateTimeString, temp} = data.currentWeatherData
             const { temp:maxMintemp } = data.dailyWeatherData[0]
             setWeatherData({dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]})
             // setCoords(tempCoords)

@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext, useContext } from 'react'
 import { Alert } from 'react-native'
 import AsyncStorage from '../services/asyncStorageService'
 import Location from '../services/locationService'
+import weatherDataForCoords from '../services/weatherService'
 
 const CoordsData = createContext()
 export function useCoordsData(){
@@ -12,70 +13,71 @@ export default function CoordsDataProvider({children}){
 
     const [defaultCoords, setDefaultCoords] = useState()
     const [permissionStatus, setPermissionStatus] = useState()
-    const [citiesList, setCitiesList] = useState([])
+    const [citiesDataList, setCitiesDataList] = useState([])
 
     useEffect(()=>{
         // AsyncStorage.removeData('cities')
         // .then(()=>console.log('cleared'))
 
-        AsyncStorage.getData('cities')
+        AsyncStorage.getData('citiesData')
         .then(data=>{
-            console.log('list retrieved from ansycstorage')
-            setCitiesList(data)
-            console.log(citiesList)
+            console.log('datalist retrieved from ansycstorage')
+            setCitiesDataList(data)
+            console.log(citiesDataList)
+            return computeCitiesData()
+        })
+        .then(updatedData=>{
+            console.log('datalist updated')
+            updatedData && setCitiesDataList(updatedData)
         })
         .catch(err=>{
             console.error(err.message)
         })
     },[])
 
-    useEffect(()=>{
-        AsyncStorage.putData('cities',citiesList)
-        .then(()=>{
-            console.log('list updated in ansycstorage')
-            console.log(citiesList)
-        })
-        .catch(err=>{
-            console.error(err.message)
-        })
-    },[citiesList])
-
-    // const getDefaultCoords = async () => {
-    //     const permission = await Location.checkForPermission()
-    //     if(permission){
-    //         setPermissionStatus(true)
-    //         // get new coords and save then in storage
-    //         const coords = await Location.getCurrentPositionCoords()
-    //         if(coords){
-    //             setDefaultCoords(coords)
-    //             console.log('bkp')
-    //             console.log(defaultCoords)
-    //             await AsyncStorage.putData('defaultCoords', coords)
-    //         }
-    //     }
-    //     else {
-    //         setPermissionStatus(false)
-    //         // get coords from storage
-    //         const coords = await AsyncStorage.getData('defaultCoords')
-    //         if (coords){
-    //             setDefaultCoords(coords)
-    //         }
-    //         else{
-    //             Alert.alert('Warning', 'Enable your Location')
-    //         }
-    //     }
-    // }
-
     // useEffect(()=>{
-    //     getDefaultCoords()
-    // },[])
+    //     AsyncStorage.putData('citiesData',citiesDataList)
+    //     .then(()=>{
+    //         console.log('list updated in ansycstorage')
+    //         console.log(citiesDataList)
+    //     })
+    //     .catch(err=>{
+    //         console.error(err.message)
+    //     })
+    // },[citiesList])
+
+    const computeDataForCity = async (cityName) => {
+        try {
+            console.log('returning promise for',cityName)
+            const coordsFromCity = await Location.getCoordsFromCityName(cityName)
+            console.log('reached here after retreiving locationdata for',cityName)
+            const weatherData = await weatherDataForCoords(coordsFromCity)
+            console.log('reached here after retreiving weatherdata for',cityName)
+            const {temp, dateTimeString} = weatherData.currentWeatherData
+            const { temp:maxMintemp } = weatherData.dailyWeatherData[0]
+            const data = {cityName, dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]}
+            return data
+        }catch(err){throw new Error(err)}
+    }
+
+    const computeCitiesData = async () => {
+        let arrOfResponses = []
+        if(!citiesDataList)
+            return
+        for(let i=0;i<citiesDataList.length;i++){
+            const data = await computeDataForCity(citiesDataList[i].cityName)
+            arrOfResponses.push(data)
+        }
+        return arrOfResponses
+    }
 
     const values = {
         defaultCoords,
         setDefaultCoords,
         permissionStatus,
         setPermissionStatus,
-        citiesList, setCitiesList,
+        citiesDataList, setCitiesDataList,
+        computeCitiesData,
     }
 
     return(

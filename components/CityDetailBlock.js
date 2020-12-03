@@ -4,7 +4,7 @@ import { useCoordsData } from '../context/CoordsData'
 
 export default function CityDetailBlock({city, weatherData}){
 
-    const { citiesList, setCitiesList } = useCoordsData()
+    const { citiesDataList, setCitiesDataList } = useCoordsData()
 
     // const [data, setData] = useState()
 
@@ -14,14 +14,22 @@ export default function CityDetailBlock({city, weatherData}){
     //     setData({dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]})
     // }, [city, weatherData])
 
+    const isCityPresentInList = (cityName) => {
+        const result = citiesDataList.find(cityData=> cityData.cityName === cityName)
+        return result?true:false
+    }
 
     const handleAdd = () => {
-        setCitiesList(currCityList=>{
-            return [...currCityList, city]
+        setCitiesDataList(currCityDataList=>{
+            const newData = {
+                cityName:city,
+                ...weatherData
+            }
+            return [...currCityDataList, newData]
         })
     }
 
-    console.log(citiesList)
+    console.log(citiesDataList)
 
     return (
         <View style={styles.container}>
@@ -38,7 +46,7 @@ export default function CityDetailBlock({city, weatherData}){
                 </View>
             </View>
             <View style={styles.options}>
-                {citiesList && citiesList.includes(city)?
+                {citiesDataList && isCityPresentInList(city)?
                     <Text style={{fontSize:20, color:'blue', fontWeight:'bold'}}>Details</Text>:
                     <Text style={{fontSize:20, color:'blue', fontWeight:'bold'}} onPress={handleAdd} >Add</Text>}
             </View>

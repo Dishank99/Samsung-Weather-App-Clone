@@ -74,8 +74,9 @@ function getHourlyWeatherData(data){
         const { main } = weather[0]
         const description = main
         const dateTime = getDateTimeFromDt(dt)
-        const dateTimeString = dateTime.getOnlyTime()
-        return { dateTimeString, description, temp:Math.round(temp-273.15), key: index.toString() }
+        const timeString = dateTime.getOnlyTime()
+        const dateTimeString = dateTime.getOnlyDate() + ' ' + dateTime.getOnlyTime()
+        return { dateTimeString, timeString, description, temp:Math.round(temp-273.15), key: index.toString() }
     })
     // console.log(hourlyData)
     return hourlyData
