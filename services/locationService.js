@@ -26,6 +26,7 @@ async function getCityNameFromCoords(coords) {
 
 async function getCoordsFromCityName(city){
     try{
+        console.log('location for',city)
         const geocode = await Location.geocodeAsync(city)
         const {latitude, longitude} = geocode[0]
         return {latitude, longitude}

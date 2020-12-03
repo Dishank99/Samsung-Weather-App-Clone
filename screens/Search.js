@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, Modal, TouchableWithoutFeedback, StatusBar, FlatList } from 'react-native'
-import MapView from 'react-native-maps'
 
 import { MaterialIcons } from '@expo/vector-icons';
 
 import SearchInput from '../components/SearchInput'
 import CityDetailBlock from '../components/CityDetailBlock'
+import Map from '../components/Map'
 
 import { useCoordsData } from '../context/CoordsData'
 import Location from '../services/locationService'
 import weatherDataForCoords from '../services/weatherService'
+import { Children } from 'react';
 
 // import cityList from '../city_list.json'
 
@@ -33,37 +34,6 @@ export function SearchScreenHeader(props) {
             <SearchInput navigation={props.navigation}/>
             <MaterialIcons name="gps-fixed" size={24} color="black" style={styles.icon} />
         </View>
-    )
-}
-
-function Map({coords}) {
-
-    // const [mapCoords, setMapCoords] = useState(coords)
-
-    // useEffect(()=>{
-    //     if(mapCoords !== coords)
-    //         setMapCoords(coords)
-    // },[coords])
-
-    // console.log('map',mapCoords)
-    // console.log('prop', coords)
-    // console.log(mapCoords !== coords)
-    return (
-        <MapView style={{ flex:1 }} 
-            initialRegion={{
-            ...coords,
-            latitudeDelta: 0.04,
-            longitudeDelta: 0.05,
-            }}
-            key={ coords.latitude}
-        
-            >
-            <MapView.Marker
-                key={ coords.latitude}
-                coordinate={coords}
-                title={'You are Here'}
-            />
-        </MapView>
     )
 }
 
@@ -126,7 +96,7 @@ export default function Search(props) {
     // },[inputText])
 
     const {defaultCoords} = useCoordsData()
-    const [coords, setCoords] = useState({latitude:19.732, longitude:14.121})
+    const [coords, setCoords] = useState({latitude:19.2094, longitude:73.0939})
     const [weatherData, setWeatherData] = useState()
     const [city, setCity] = useState()
 
@@ -139,18 +109,25 @@ export default function Search(props) {
     })
 
     const handleSubmitEditting = (inputText) => {
+        let tempCoords = null
+        let tempCity = null
         console.log(inputText)
         Location.getCoordsFromCityName(inputText)
         .then(coordsFromCity=>{
             // console.log(coordsFromCity)
+            // setCoords(coordsFromCity)
+            // tempCoords = coordsFromCity
+            // tempCity = inputText
+            setCity(inputText.trim().toLowerCase())
             setCoords(coordsFromCity)
-            setCity(inputText)
             return weatherDataForCoords(coords)
         })
         .then(data=>{
             const {dateTimeString, temp} = data.currentWeatherData
             const { temp:maxMintemp } = data.dailyWeatherData[0]
             setWeatherData({dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]})
+            // setCoords(tempCoords)
+            // setCity(tempCity)
         })
         .catch(err=>{
             console.log(err)
@@ -165,21 +142,21 @@ export default function Search(props) {
 
     return (
         <View style={{flex:1}}>
-        <View style={styles.header}>
-            <SearchInput
-                navigation={props.navigation}
-                // value={inputText}
-                // onChangeText={text=>inputTextOnChangeHandler(text)}
-                handleSubmitEditting={handleSubmitEditting}
-            />
-            <MaterialIcons name="gps-fixed" size={24} color="black" style={styles.icon} />
-        </View>
-        <View style={styles.container}>
-            {/*inputText?<SuggestionList suggestions={suggestions}/>:
-    <Map coords={{latitude: 19.219575,longitude: 73.089757}} />*/}
-            <Map coords={coords} />
-            {city && weatherData && <CityDetailBlock city={city} weatherData={weatherData}/>}
-        </View>
+            <View style={styles.header}>
+                <SearchInput
+                    navigation={props.navigation}
+                    // value={inputText}
+                    // onChangeText={text=>inputTextOnChangeHandler(text)}
+                    handleSubmitEditting={handleSubmitEditting}
+                />
+                <MaterialIcons name="gps-fixed" size={24} color="black" style={styles.icon} />
+            </View>
+            <View style={styles.container}>
+                {/*inputText?<SuggestionList suggestions={suggestions}/>:
+        <Map coords={{latitude: 19.219575,longitude: 73.089757}} />*/}
+                <Map coords={coords} />
+                {city && weatherData && <CityDetailBlock city={city} weatherData={weatherData}/>}
+            </View>
         </View>
     )
 }

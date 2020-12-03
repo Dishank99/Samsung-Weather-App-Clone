@@ -12,6 +12,33 @@ export default function CoordsDataProvider({children}){
 
     const [defaultCoords, setDefaultCoords] = useState()
     const [permissionStatus, setPermissionStatus] = useState()
+    const [citiesList, setCitiesList] = useState([])
+
+    useEffect(()=>{
+        // AsyncStorage.removeData('cities')
+        // .then(()=>console.log('cleared'))
+
+        AsyncStorage.getData('cities')
+        .then(data=>{
+            console.log('list retrieved from ansycstorage')
+            setCitiesList(data)
+            console.log(citiesList)
+        })
+        .catch(err=>{
+            console.error(err.message)
+        })
+    },[])
+
+    useEffect(()=>{
+        AsyncStorage.putData('cities',citiesList)
+        .then(()=>{
+            console.log('list updated in ansycstorage')
+            console.log(citiesList)
+        })
+        .catch(err=>{
+            console.error(err.message)
+        })
+    },[citiesList])
 
     // const getDefaultCoords = async () => {
     //     const permission = await Location.checkForPermission()
@@ -48,6 +75,7 @@ export default function CoordsDataProvider({children}){
         setDefaultCoords,
         permissionStatus,
         setPermissionStatus,
+        citiesList, setCitiesList,
     }
 
     return(

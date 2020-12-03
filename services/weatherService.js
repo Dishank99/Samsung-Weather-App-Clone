@@ -61,6 +61,7 @@ function getCurrentWeatherData(data){
     const precipitation = `${clouds}%`
     const description = main
     
+    // console.log('current data',{dateTimeString, temp, feels_like, uvi, precipitation, description})
     return {dateTimeString, temp, feels_like, uvi, precipitation, description}
 }
 
@@ -88,10 +89,11 @@ function getDailyWeatherData(data){
         const { main } = weather[0]
         const description = main
         const dateTime = getDateTimeFromDt(dt)
-        const dateTimeString = dateTime.getOnlyDate().split(' ')[0]
+        const dayString = dateTime.getOnlyDate().split(' ')[0]
+        const dateTimeString = dateTime.getOnlyDate() + ' ' + dateTime.getOnlyTime()
         const {max, min} = temp
         temp = new Array(Math.round(max-273.15), Math.round(min-273.15))
-        return { dateTimeString, description, temp, key: index.toString() }
+        return { dateTimeString, dayString, description, temp, key: index.toString() }
     })
     // console.log(hourlyData)
     return dailyData

@@ -1,2 +1,7 @@
 [.] complete design of search screen
-[] implement storing of cities if not already stored, if already stored then show details on home screen
+[.] fix the rerendering of map component => fixed by using React.memo eq.to. shouldComponentUpdate | better than just assigning key 
+[.] implement storing of cities if not already stored, if already stored then show details on home screen
+[.] add cities list as obj with key and display them in location screen
+[.] fetch current weather data from location
+[.] fix saving data in AsyncStorage issue
+[] fix late rendering of details block

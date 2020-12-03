@@ -1,10 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, Modal, TouchableWithoutFeedback, StatusBar, FlatList } from 'react-native'
 
 import { Ionicons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import MenuModal from '../shared/MenuModal'
-import { MaterialIcons } from '@expo/vector-icons';
+import ListItem from '../components/ListItem'
+
+import { useCoordsData } from '../context/CoordsData'
+import LocationService from '../services/locationService'
+import weatherDataForCoords from '../services/weatherService'
 
 
 export function LocationScreenHeader(props) {
@@ -29,29 +33,75 @@ export function LocationScreenHeader(props) {
 }
 
 export default function Location() {
-    const DetailsCard = (props) => (
-        <View style={styles.details__container}>
-            <View style={styles.placeAndTime}>
-                <Text style={styles.mainText}><MaterialIcons name="location-on" size={16} color="black" style={styles.icon} />Dombivli</Text>
-                <Text style={styles.subText}>Maharashtra, India</Text>
-                <Text style={styles.subText}>Sun 18 October 3:03 pm</Text>
-            </View>
-            <View style={styles.temp}>
-                <Text style={styles.mainText}>32°</Text>
-                <Text style={styles.subText}>33° / 25°</Text>
-            </View>
-        </View>
-    )
+    
+    const {citiesList} = useCoordsData()
+
+    const [citiesData, setCitiesData] = useState()
+
+    // const computeCitiesData = () => {
+    //     citiesList.forEach((cityName)=>{
+    //         LocationService.getCoordsFromCityName(cityName)
+    //         .then(coordsFromCity=>{
+    //             console.log('bkp2')
+    //             return weatherDataForCoords(coordsFromCity)
+    //         })
+    //         .then(weatherData=>{
+    //             console.log('bkp3')
+    //             const {dateTimeString, temp} = weatherData.currentWeatherData
+    //             const { temp:maxMintemp } = weatherData.dailyWeatherData[0]
+    //             console.log({cityName, dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]})
+    //             setCitiesData(currCityData =>{
+    //                 console.log(currCityData)
+    //                 if(currCityData) //fix this..error
+    //                     return [...currCityData, {cityName, dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]}]
+    //                 else
+    //                     return {cityName, dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]}
+    //             })
+                
+    //             console.log('bkp4')
+    //             console.log(citiesData)
+    //         })
+    //     })
+    // }
+
+    const computeDataForCity = async (cityName) => {
+        try {
+            console.log('returning promise for',cityName)
+            const coordsFromCity = await LocationService.getCoordsFromCityName(cityName)
+            console.log('reached here after retreiving locationdata for',cityName)
+            const weatherData = await weatherDataForCoords(coordsFromCity)
+            console.log('reached here after retreiving weatherdata for',cityName)
+            const {temp} = weatherData.currentWeatherData
+            const { temp:maxMintemp, dateTimeString } = weatherData.dailyWeatherData[0]
+            const data = {cityName, dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]}
+            return data
+        }catch(err){throw new Error(err)}
+    }
+
+    const computeCitiesData = async () => {
+        let arrOfResponses = []
+        for(let i=0;i<citiesList.length;i++){
+            const data = await computeDataForCity(citiesList[i])
+            arrOfResponses.push(data)
+        }
+        setCitiesData(arrOfResponses)
+    }
+
+    useEffect(()=>{
+        computeCitiesData()
+    },[])
+    
 
     return (
         <View style={styles.container}>
             <FlatList
-                data={[{ key: '1' }, { key: '2' }, { key: '3' }]}//data
-                renderItem={DetailsCard}
+                data={citiesData}//data
+                renderItem={({item})=><ListItem item={item}/>}
                 ItemSeparatorComponent={() => (
                     <View style={{ width: '100%', height: '0.5%', backgroundColor: 'grey' }} >
                     </View>
                 )}
+                keyExtractor={(item)=>item.cityName}
             />
 
         </View>
@@ -104,7 +154,8 @@ const styles = StyleSheet.create({
         // borderColor: 'black',
     },
     mainText: {
-        fontSize: 20
+        fontSize: 20,
+        textTransform:'capitalize',
     },
     subText: {
         color: 'grey'

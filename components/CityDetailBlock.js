@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import { useCoordsData } from '../context/CoordsData'
 
 export default function CityDetailBlock({city, weatherData}){
+
+    const { citiesList, setCitiesList } = useCoordsData()
 
     // const [data, setData] = useState()
 
@@ -10,6 +13,15 @@ export default function CityDetailBlock({city, weatherData}){
     //     const { maxMintemp } = weatherData.dailyWeatherData
     //     setData({dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]})
     // }, [city, weatherData])
+
+
+    const handleAdd = () => {
+        setCitiesList(currCityList=>{
+            return [...currCityList, city]
+        })
+    }
+
+    console.log(citiesList)
 
     return (
         <View style={styles.container}>
@@ -26,7 +38,9 @@ export default function CityDetailBlock({city, weatherData}){
                 </View>
             </View>
             <View style={styles.options}>
-                <Text style={{fontSize:20, color:'blue', fontWeight:'bold'}}>Add</Text>
+                {citiesList && citiesList.includes(city)?
+                    <Text style={{fontSize:20, color:'blue', fontWeight:'bold'}}>Details</Text>:
+                    <Text style={{fontSize:20, color:'blue', fontWeight:'bold'}} onPress={handleAdd} >Add</Text>}
             </View>
         </View>     
     )
