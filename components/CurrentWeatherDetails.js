@@ -4,8 +4,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import DetailsCard from './DetailsCard';
 import TimelyWeatherDetails from './TimelyWeatherDetails'
+import WeatherIcon from './WeatherIcon'
 
-export default function CurrentWeatherDetails(props) {
+export default function CurrentWeatherDetails({ currentWeatherData, dailyWeatherData, hourlyWeatherData }) {
 
     const DATA = [
         { dateTimeString: '12:30am', percent: '5', temp: '27', key: '1' },
@@ -59,26 +60,29 @@ export default function CurrentWeatherDetails(props) {
     return (
         <View style={styles.container} >
             <View style={styles.temperature__container}>
-                <MaterialCommunityIcons
-                    name="weather-night-partly-cloudy"
-                    size={60} color="white"
+                <WeatherIcon
+                    size = {120}
+                    code = { currentWeatherData.icon } 
                 />
-                <Text style={styles.temperature__text}>33°</Text>
+                <Text style={styles.temperature__text}>{currentWeatherData.temp}°</Text>
             </View>
-            <Text style={[styles.moreDetails__feels, { color: 'darkgrey' }]}>34°/30° Feels like 33°</Text>
-            <Text style={[styles.moreDetails__feels, { color: 'white' }]}>Smoke</Text>
+            <Text style={[styles.moreDetails__feels, { color: 'darkgrey' }]}>
+                {dailyWeatherData[0].temp[0]}°/{dailyWeatherData[0].temp[1]}° Feels like {currentWeatherData.feels_like}°
+            </Text>
+            <Text style={[styles.moreDetails__feels, { color: 'white' }]}>{currentWeatherData.description}</Text>
 
             <View style={{ marginTop: '8%' }}>
-                <Text style={{ color: 'white', fontSize: 16, alignSelf: 'flex-end', marginHorizontal: '9%', marginBottom: 5 }}>Yesterday: 33°/26°</Text>
+                <Text style={{ color: 'white', fontSize: 16, alignSelf: 'flex-end', marginHorizontal: '9%', marginBottom: 5 }}>
+                    Yesterday: 33°/26°
+                </Text>
                 <DetailsCard>
-                    <SomeMoreDetails type='Precipitation' value='1%' />
-                    <SomeMoreDetails seperator={true} type='UV Index' value='0' />
+                    <SomeMoreDetails type='Precipitation' value={currentWeatherData.precipitation} />
+                    <SomeMoreDetails seperator={true} type='UV Index' value={currentWeatherData.uvi} />
                 </DetailsCard>
             </View>
 
-            <DetailsBlock type = 'Hourly' data = {DATA} />
-            <DetailsBlock type= 'Daily' data = {DATA} />
-            <DetailsBlock />
+            <DetailsBlock type = 'Hourly' data = {hourlyWeatherData} />
+            <DetailsBlock type= 'Daily' data = {dailyWeatherData} />
 
 
 
@@ -98,7 +102,7 @@ const styles = StyleSheet.create({
         paddingTop: '4.5%',//18,
         paddingBottom: '1%',
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
+        // justifyContent: 'space-evenly',
         alignItems: 'center',
     },
     temperature__text: {

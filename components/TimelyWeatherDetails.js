@@ -2,11 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import WeatherIcon from './WeatherIcon'
 
 export default function TimelyWeatherDetails({ item }) {
     let temp = ''
     if(item.temp instanceof Array){
-        console.log('reacher here')
+        // console.log('reacher here')
         temp = `${item.temp[0]}°/${item.temp[1]}°`
     }
     else
@@ -14,10 +15,9 @@ export default function TimelyWeatherDetails({ item }) {
     return (
         <View style={styles.container}>
             <Text style={{ color: 'white', fontSize: 18 }} >{item.dateTimeString}</Text>
-            <MaterialCommunityIcons
-                name="weather-night-partly-cloudy"
-                size={30} color="white"
-                style={{ marginVertical: 15 }}
+            <WeatherIcon
+                size={30}
+                code = {item.icon}
             />
             {/* <Text style={{ color: 'white', fontSize: 10, marginVertical: '5%' }} >5%</Text> */}
             <View>

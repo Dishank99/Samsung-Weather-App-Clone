@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import Location from '../services/locationService'
 import weatherDataForCoords from '../services/weatherService'
 import { MaterialIcons } from '@expo/vector-icons';
 import WeatherIcon from '../components/WeatherIcon'
+import { useCoordsData } from '../context/CoordsData'
 
-export default function ListItem({item}){
+export default function ListItem({item, permissionStatus, onPressedHandler}){
 
     // const [cityData, setCityData] = useState({dateTimeString:'d', temp:1, maxTemp:1, minTemp:1})
 
@@ -25,11 +26,16 @@ export default function ListItem({item}){
     //     })
     // },[cityName])
 
+    const iconString = permissionStatus?'location-on':'location-off'
     return (
+        <TouchableOpacity onPress={()=>onPressedHandler(item.index)}>
         <View style={styles.details__container}>
             <View style={styles.placeAndTime}>
-                <Text style={styles.mainText}><MaterialIcons name="location-on" size={16} color="black" style={styles.icon} />{item.cityName}</Text>
-                <Text style={styles.subText}>Maharashtra, India</Text>
+                <Text style={styles.mainText}>
+                    {item.isDefault && <MaterialIcons name={iconString} size={16} color="black" style={styles.icon} />}
+                    {item.cityName}
+                </Text>
+                <Text style={styles.subText}>{item.description}</Text>
                 <Text style={styles.subText}>{item.dateTimeString}</Text>
             </View>
             <View style={styles.temp}>
@@ -40,6 +46,7 @@ export default function ListItem({item}){
                 <Text style={styles.subText}>{item.maxTemp}° / {item.minTemp}°</Text>
             </View>
         </View>
+        </TouchableOpacity>
     )
 }
 

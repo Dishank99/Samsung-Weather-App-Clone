@@ -33,56 +33,41 @@ export function LocationScreenHeader(props) {
     )
 }
 
-export default function Location() {
+export default function Location({navigation}) {
     
-    const {citiesDataList} = useCoordsData()
+    const {citiesDataList, permissionStatus, setHomeData} = useCoordsData()
 
-    // const [citiesData, setCitiesData] = useState()
+    const [data, setData] = useState()
 
-    // const computeCitiesData = () => {
-    //     citiesList.forEach((cityName)=>{
-    //         LocationService.getCoordsFromCityName(cityName)
-    //         .then(coordsFromCity=>{
-    //             console.log('bkp2')
-    //             return weatherDataForCoords(coordsFromCity)
-    //         })
-    //         .then(weatherData=>{
-    //             console.log('bkp3')
-    //             const {dateTimeString, temp} = weatherData.currentWeatherData
-    //             const { temp:maxMintemp } = weatherData.dailyWeatherData[0]
-    //             console.log({cityName, dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]})
-    //             setCitiesData(currCityData =>{
-    //                 console.log(currCityData)
-    //                 if(currCityData) //fix this..error
-    //                     return [...currCityData, {cityName, dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]}]
-    //                 else
-    //                     return {cityName, dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]}
-    //             })
-                
-    //             console.log('bkp4')
-    //             console.log(citiesData)
-    //         })
-    //     })
-    // }
-
+    useEffect(()=>{
+            setData(
+                citiesDataList.map((eachData, index)=>{
+                    const { cityName, weatherData, isDefault } = eachData
+                    const {dateTimeString, temp, icon, description} = weatherData.currentWeatherData
+                    const { temp:maxMintemp } = weatherData.dailyWeatherData[0]
+                    const [maxTemp, minTemp] = [maxMintemp[0],maxMintemp[1]]
     
+                    return { index, cityName, isDefault, dateTimeString, temp, icon, maxTemp, minTemp, description }
+                })
+            )
+    },[])
 
-    // useEffect(()=>{
-    //     computeCitiesData()
-    // },[])
+    const handlePressed = (index) => {
+        setHomeData(citiesDataList[index])
+        navigation.navigate('Home')
+    }
     
-
     return (
         <View style={{flex:1}} >
             <View style={styles.container}>
                 <FlatList
-                    data={citiesDataList}//data
-                    renderItem={({item})=><ListItem item={item}/>}
+                    data={data}//data
+                    renderItem={({item})=><ListItem item={item} permissionStatus={permissionStatus} onPressedHandler={handlePressed}/>}
                     ItemSeparatorComponent={() => (
                         <View style={{ width: '100%', height: '0.5%', backgroundColor: 'grey' }} >
                         </View>
                     )}
-                    keyExtractor={(item)=>item.cityName}
+                    keyExtractor={(item)=>item.index.toString()}
                 />
                 
             </View>

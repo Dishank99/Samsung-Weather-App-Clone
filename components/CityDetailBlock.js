@@ -3,17 +3,19 @@ import { View, Text, StyleSheet } from 'react-native'
 import WeatherIcon from '../components/WeatherIcon'
 import { useCoordsData } from '../context/CoordsData'
 
-export default function CityDetailBlock({city, weatherData}){
+export default function CityDetailBlock({city, coords, weatherData, navigation}){
 
-    const { citiesDataList, setCitiesDataList } = useCoordsData()
+    const { citiesDataList, setCitiesDataList, setHomeData } = useCoordsData()
 
     // const [data, setData] = useState()
 
     // useEffect(() => {
-    //     const {dateTimeString, temp} = weatherData.currentWeatherData
-    //     const { maxMintemp } = weatherData.dailyWeatherData
-    //     setData({dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]})
-    // }, [city, weatherData])
+    //     if(weatherData){
+    //         const {dateTimeString, temp, icon} = weatherData.currentWeatherData
+    //         const { maxMintemp } = weatherData.dailyWeatherData[0]
+    //         setData({dateTimeString, temp, icon, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]})
+    //     }
+    // }, [weatherData])
 
     const isCityPresentInList = (cityName) => {
         const result = citiesDataList.find(cityData=> cityData.cityName === cityName)
@@ -24,13 +26,25 @@ export default function CityDetailBlock({city, weatherData}){
         setCitiesDataList(currCityDataList=>{
             const newData = {
                 cityName:city,
-                ...weatherData
+                coords,
+                weatherData,
+                isDefault:false,
             }
             return [...currCityDataList, newData]
         })
     }
 
-    console.log(citiesDataList)
+    const handleDetails = () => {
+        // const cityDataObject = citiesDataList.find(cityData => cityData.cityName === city)
+        setHomeData(citiesDataList[citiesDataList.length-1])
+        navigation.navigate('Home')
+    }
+
+    // console.log(citiesDataList)
+
+    const {dateTimeString, temp, icon} = weatherData.currentWeatherData
+    const { temp:maxMintemp } = weatherData.dailyWeatherData[0]
+    const [maxTemp, minTemp] = [maxMintemp[0],maxMintemp[1]]
 
     return (
         <View style={styles.container}>
@@ -38,19 +52,19 @@ export default function CityDetailBlock({city, weatherData}){
                 <View>
                     <Text style={{fontSize:22, textTransform:'capitalize'}}>{city}</Text>
                     <Text style={styles.smallText}>Info</Text>
-                    <Text style={styles.smallText}>{weatherData.dateTimeString}</Text>
+                    <Text style={styles.smallText}>{dateTimeString}</Text>
                 </View>
                 <View style={{paddingVertical:10}}>
                     <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}} >
-                        <WeatherIcon size={40} code={weatherData.icon} />
-                        <Text style={{fontSize:28}}>{weatherData.temp}°</Text>
+                        <WeatherIcon size={40} code={icon} />
+                        <Text style={{fontSize:28}}>{temp}°</Text>
                     </View>
-                    <Text style={{...styles.smallText, textAlign:'right'}}>{weatherData.maxTemp}°/{weatherData.minTemp}°</Text>
+                    <Text style={{...styles.smallText, textAlign:'right'}}>{maxTemp}°/{minTemp}°</Text>
                 </View>
             </View>
             <View style={styles.options}>
                 {citiesDataList && isCityPresentInList(city)?
-                    <Text style={{fontSize:20, color:'blue', fontWeight:'bold'}}>Details</Text>:
+                    <Text style={{fontSize:20, color:'blue', fontWeight:'bold'}} onPress={handleDetails} >Details</Text>:
                     <Text style={{fontSize:20, color:'blue', fontWeight:'bold'}} onPress={handleAdd} >Add</Text>}
             </View>
         </View>     

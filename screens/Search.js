@@ -95,18 +95,28 @@ export default function Search(props) {
     //     setSuggestions(cities.filter(city => city.name.indexOf(inputText)>=0))
     // },[inputText])
 
+    const { citiesDataList } = useCoordsData()
+
     const {defaultCoords} = useCoordsData()
-    const [coords, setCoords] = useState({latitude:19.2094, longitude:73.0939})
+    const [coords, setCoords] = useState({latitude:19.21667, longitude:73.08333})
     const [weatherData, setWeatherData] = useState()
     const [city, setCity] = useState()
+
+    useEffect(()=>{
+        if(citiesDataList){
+            setCoords(citiesDataList[0].coords)
+            setWeatherData(citiesDataList[0].weatherData)
+            setCity(citiesDataList[0].cityName)
+        }
+    },[])
 
     useEffect(()=>{
         console.log(coords.latitude, coords.longitude)
     },[coords])
 
-    useEffect(()=>{
-        console.log('component rendered')
-    })
+    // useEffect(()=>{
+    //     console.log('component rendered')
+    // })
 
     const handleSubmitEditting = (inputText) => {
         let tempCoords = null
@@ -114,6 +124,7 @@ export default function Search(props) {
         console.log(inputText)
         Location.getCoordsFromCityName(inputText)
         .then(coordsFromCity=>{
+            console.log('bkp1')
             // console.log(coordsFromCity)
             // setCoords(coordsFromCity)
             // tempCoords = coordsFromCity
@@ -123,9 +134,11 @@ export default function Search(props) {
             return weatherDataForCoords(coordsFromCity)
         })
         .then(data=>{
-            const { dateTimeString, temp, icon} = data.currentWeatherData
-            const { temp:maxMintemp } = data.dailyWeatherData[0]
-            setWeatherData({dateTimeString, temp, icon, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]})
+            // const { dateTimeString, temp, icon} = data.currentWeatherData
+            // const { temp:maxMintemp } = data.dailyWeatherData[0]
+            // console.log(data)
+            setWeatherData(data)
+            console.log('bkp2')
             // setCoords(tempCoords)
             // setCity(tempCity)
         })
@@ -155,7 +168,7 @@ export default function Search(props) {
                 {/*inputText?<SuggestionList suggestions={suggestions}/>:
         <Map coords={{latitude: 19.219575,longitude: 73.089757}} />*/}
                 <Map coords={coords} />
-                {city && weatherData && <CityDetailBlock city={city} weatherData={weatherData}/>}
+                {city && weatherData && <CityDetailBlock city={city} coords={coords} weatherData={weatherData} navigation={props.navigation}/>}
             </View>
         </View>
     )

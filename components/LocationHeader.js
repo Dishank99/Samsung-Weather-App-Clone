@@ -2,11 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function LocationHeader({permissionGiven, city}) {
+export default function LocationHeader({isDefault, permissionGiven, city}) {
     const iconString = permissionGiven?'location-on':'location-off'
     return (
         <View style={styles.header}>
-            <MaterialIcons name={iconString} size={20} color="white" style={styles.icon} />
+            {isDefault && <MaterialIcons name={iconString} size={20} color="white" style={styles.icon} />}
             <Text style={styles.title}>
                 {city}
             </Text>
@@ -30,5 +30,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: 'white',
         paddingTop: 5,
+        textTransform:'capitalize',
     },
 })

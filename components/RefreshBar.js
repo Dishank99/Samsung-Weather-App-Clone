@@ -6,13 +6,13 @@ import { useCoordsData } from '../context/CoordsData'
 
 export default function RefreshBar() {
 
-    const {computeCitiesData, setCitiesDataList} = useCoordsData()
+    const {computeCitiesData, citiesDataList, setCitiesDataList} = useCoordsData()
 
     const [loading, setLoading] = useState(false)
 
     const handleRefresh = () => {
         setLoading(true)
-        computeCitiesData()
+        computeCitiesData(citiesDataList)
         .then(updatedData=>{
             setCitiesDataList(updatedData)
             setLoading(false)

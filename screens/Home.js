@@ -13,6 +13,13 @@ import { useCoordsData } from '../context/CoordsData'
 export default function Home({navigation}) {
 
     const [visible, setVisible] = useState()
+    const { homeData, setHomeData, citiesDataList, permissionStatus } = useCoordsData()
+
+    // useEffect(()=>{
+    //     console.log('log from homescreen for citiesDataList', citiesDataList)
+    //     if(citiesDataList)
+    //         setHomeData(citiesDataList[0])
+    // },[citiesDataList])
 
     const handleScroll = (e) => {
         const inset = e.nativeEvent.contentInset
@@ -33,21 +40,25 @@ export default function Home({navigation}) {
                 onPressSearch={() => navigation.push('Search')}
             />
             
-            <LocationHeader city='Dombivli'/>
-            <Text style={
-                [
-                    { color: 'darkgrey', zIndex: 3, fontSize: 18 },
-                    visible === 'none' ? { display: 'none' } : { display: 'flex' }
-                    // { display: 'flex' }
-                ]
-            } > Mon17 Nov 2020 7:43 PM </Text>
-            <ScrollView style={{ width: '100%' }} showsVerticalScrollIndicator={false}
-                onScrollBeginDrag={() => setVisible('none')}
-                onScrollEndDrag={handleScroll}>
-                <CurrentWeatherDetails />
-            </ScrollView>
-            
-
+            {homeData && <React.Fragment>
+                <LocationHeader isDefault={homeData.isDefault} permissionGiven={permissionStatus} city={homeData.cityName}/>
+                <Text style={
+                    [
+                        { color: 'darkgrey', zIndex: 3, fontSize: 18 },
+                        visible === 'none' ? { display: 'none' } : { display: 'flex' }
+                        // { display: 'flex' }
+                    ]
+                } > { homeData.weatherData.currentWeatherData.dateTimeString } </Text>
+                <ScrollView style={{ width: '100%' }} showsVerticalScrollIndicator={false}
+                    onScrollBeginDrag={() => setVisible('none')}
+                    onScrollEndDrag={handleScroll}>
+                    <CurrentWeatherDetails
+                        currentWeatherData = {homeData.weatherData.currentWeatherData}
+                        dailyWeatherData = {homeData.weatherData.dailyWeatherData}
+                        hourlyWeatherData = {homeData.weatherData.hourlyWeatherData}
+                    />
+                </ScrollView>
+            </React.Fragment>}
         </View>
     );
 }

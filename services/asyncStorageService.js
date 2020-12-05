@@ -15,13 +15,15 @@ async function getData(key){
         }
         return result;
     })
-    .catch(err=>console.error(error.message))
+    .catch(err=>{
+        console.error(err.message)
+    })
         
 }
 
 async function putData(key, data){
     try{
-        await AsyncStorage.setItem(key, JSON.stringify(data))
+        AsyncStorage.setItem(key, JSON.stringify(data))
     }catch(err){
         console.error('AS set',err.message)
     }
