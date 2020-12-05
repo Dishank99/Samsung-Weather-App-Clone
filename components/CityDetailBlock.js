@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import WeatherIcon from '../components/WeatherIcon'
 import { useCoordsData } from '../context/CoordsData'
 
 export default function CityDetailBlock({city, weatherData}){
@@ -40,9 +41,11 @@ export default function CityDetailBlock({city, weatherData}){
                     <Text style={styles.smallText}>{weatherData.dateTimeString}</Text>
                 </View>
                 <View style={{paddingVertical:10}}>
-                    {/* icon */}
-                    <Text style={{fontSize:28}}>{weatherData.temp}°</Text>
-                    <Text style={styles.smallText}>{weatherData.maxTemp}°/{weatherData.minTemp}°</Text>
+                    <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}} >
+                        <WeatherIcon size={40} code={weatherData.icon} />
+                        <Text style={{fontSize:28}}>{weatherData.temp}°</Text>
+                    </View>
+                    <Text style={{...styles.smallText, textAlign:'right'}}>{weatherData.maxTemp}°/{weatherData.minTemp}°</Text>
                 </View>
             </View>
             <View style={styles.options}>

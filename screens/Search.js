@@ -120,12 +120,12 @@ export default function Search(props) {
             // tempCity = inputText
             setCity(inputText.trim().toLowerCase())
             setCoords(coordsFromCity)
-            return weatherDataForCoords(coords)
+            return weatherDataForCoords(coordsFromCity)
         })
         .then(data=>{
-            const { dateTimeString, temp} = data.currentWeatherData
+            const { dateTimeString, temp, icon} = data.currentWeatherData
             const { temp:maxMintemp } = data.dailyWeatherData[0]
-            setWeatherData({dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]})
+            setWeatherData({dateTimeString, temp, icon, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]})
             // setCoords(tempCoords)
             // setCity(tempCity)
         })

@@ -48,7 +48,7 @@ function getCurrentWeatherData(data){
     const {current} = data
     // console.log(current)
     let { dt, temp, feels_like, uvi, clouds, weather } = current
-    const { main } = weather[0]
+    const { main, icon } = weather[0]
 
     const dateTime = getDateTimeFromDt(dt)
     const date = dateTime.getOnlyDate()
@@ -62,7 +62,7 @@ function getCurrentWeatherData(data){
     const description = main
     
     // console.log('current data',{dateTimeString, temp, feels_like, uvi, precipitation, description})
-    return {dateTimeString, temp, feels_like, uvi, precipitation, description}
+    return {dateTimeString, temp, feels_like, uvi, precipitation, description, icon}
 }
 
 function getHourlyWeatherData(data){
@@ -71,12 +71,12 @@ function getHourlyWeatherData(data){
 
     const hourlyData =  hourly.map((forEachHour, index) => {
         let { dt, temp, weather } = forEachHour
-        const { main } = weather[0]
+        const { main, icon } = weather[0]
         const description = main
         const dateTime = getDateTimeFromDt(dt)
-        const timeString = dateTime.getOnlyTime()
-        const dateTimeString = dateTime.getOnlyDate() + ' ' + dateTime.getOnlyTime()
-        return { dateTimeString, timeString, description, temp:Math.round(temp-273.15), key: index.toString() }
+        const dateTimeString = dateTime.getOnlyTime()
+        // const dateTimeString = dateTime.getOnlyDate() + ' ' + dateTime.getOnlyTime()
+        return { dateTimeString, description, icon, temp:Math.round(temp-273.15), key: index.toString() }
     })
     // console.log(hourlyData)
     return hourlyData
@@ -87,14 +87,14 @@ function getDailyWeatherData(data){
     const { daily } = data
     const dailyData =  daily.map((forEachDay, index) => {
         let { dt, temp, weather } = forEachDay
-        const { main } = weather[0]
+        const { main, icon } = weather[0]
         const description = main
         const dateTime = getDateTimeFromDt(dt)
-        const dayString = dateTime.getOnlyDate().split(' ')[0]
-        const dateTimeString = dateTime.getOnlyDate() + ' ' + dateTime.getOnlyTime()
+        const dateTimeString = dateTime.getOnlyDate().split(' ')[0]
+        // const dateTimeString = dateTime.getOnlyDate() + ' ' + dateTime.getOnlyTime()
         const {max, min} = temp
         temp = new Array(Math.round(max-273.15), Math.round(min-273.15))
-        return { dateTimeString, dayString, description, temp, key: index.toString() }
+        return { dateTimeString, description, icon, temp, key: index.toString() }
     })
     // console.log(hourlyData)
     return dailyData

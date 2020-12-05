@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import Location from '../services/locationService'
 import weatherDataForCoords from '../services/weatherService'
 import { MaterialIcons } from '@expo/vector-icons';
+import WeatherIcon from '../components/WeatherIcon'
 
 export default function ListItem({item}){
 
@@ -32,7 +33,10 @@ export default function ListItem({item}){
                 <Text style={styles.subText}>{item.dateTimeString}</Text>
             </View>
             <View style={styles.temp}>
-                <Text style={styles.mainText}>{item.temp}°</Text>
+                <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}} >
+                    <WeatherIcon size={40} code={item.icon} />
+                    <Text style={styles.mainText}>{item.temp}°</Text>
+                </View>
                 <Text style={styles.subText}>{item.maxTemp}° / {item.minTemp}°</Text>
             </View>
         </View>

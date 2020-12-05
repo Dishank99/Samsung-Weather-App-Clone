@@ -5,3 +5,7 @@
 [.] fetch current weather data from location
 [.] fix saving data in AsyncStorage issue
 [.] fix late rendering of details block
+[.] setup weather icon based on weather desc
+[] setup homescreen views for diffrent cities
+[] setup display data from location
+[] setup default adding of current located city and its data

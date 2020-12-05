@@ -53,9 +53,9 @@ export default function CoordsDataProvider({children}){
             console.log('reached here after retreiving locationdata for',cityName)
             const weatherData = await weatherDataForCoords(coordsFromCity)
             console.log('reached here after retreiving weatherdata for',cityName)
-            const {temp, dateTimeString} = weatherData.currentWeatherData
+            const {temp, dateTimeString, icon} = weatherData.currentWeatherData
             const { temp:maxMintemp } = weatherData.dailyWeatherData[0]
-            const data = {cityName, dateTimeString, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]}
+            const data = {cityName, dateTimeString, icon, temp, maxTemp:maxMintemp[0], minTemp:maxMintemp[1]}
             return data
         }catch(err){throw new Error(err)}
     }
