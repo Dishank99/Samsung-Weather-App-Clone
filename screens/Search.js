@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, Modal, TouchableWithoutFeedback, StatusBar, FlatList } from 'react-native'
+import { View, Text, StyleSheet, Modal, TouchableWithoutFeedback, StatusBar, FlatList, Alert } from 'react-native'
 
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -143,6 +143,7 @@ export default function Search(props) {
             // setCity(tempCity)
         })
         .catch(err=>{
+            Alert.alert('Error',err.message)
             console.log(err)
         })
     }

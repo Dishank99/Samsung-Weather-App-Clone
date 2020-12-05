@@ -127,6 +127,7 @@ export default function CoordsDataProvider({children}){
             console.log('reached here after updating default in list')
         })
         .catch(err=>{
+            Alert.alert('Error', err.message)
             console.error('err in location code of useEffect of coordsdata.js',err)
         })
         // if(tempData){
