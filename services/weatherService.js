@@ -4,7 +4,7 @@
  * get daily details
  */
 
-const APIKEY = '50e1c7a484b69e920467b0ea866e1a9c'
+import {APIKEY} from '../env'
 
 var data = null
 
