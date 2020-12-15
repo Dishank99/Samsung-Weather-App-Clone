@@ -168,11 +168,11 @@ export default function CoordsDataProvider({children}){
             AsyncStorage.putData('citiesData',citiesDataList)
             .then(()=>{
                 console.log('list updated in ansycstorage')
-                // AsyncStorage.getData('citiesData')
-                // .then(data=>{
-                //     const dataToBeLogged = data.map((currItem)=>currItem.cityName)
-                //     console.log('logging from storage put data',dataToBeLogged)
-                // })
+                AsyncStorage.getData('citiesData')
+                .then(data=>{
+                    const dataToBeLogged = data.map((currItem)=>currItem.cityName)
+                    console.log('logging from storage put data',dataToBeLogged)
+                })
             })
             .catch(err=>{
                 console.error('storage putdata error',err.message)
@@ -220,9 +220,9 @@ export default function CoordsDataProvider({children}){
         loading,
     }
 
-    return !fontsLoaded?<AppLoading/>:(
+    return (
         <CoordsData.Provider value={values}>
-            {citiesDataList && children}
+            {fontsLoaded && citiesDataList && children}
         </CoordsData.Provider>
     )
 } 

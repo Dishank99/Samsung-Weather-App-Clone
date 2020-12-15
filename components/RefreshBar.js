@@ -6,21 +6,21 @@ import { useCoordsData } from '../context/CoordsData'
 
 export default function RefreshBar() {
 
-    const {computeCitiesData, citiesDataList, setCitiesDataList, computeAppData, loading} = useCoordsData()
+    const {computeCitiesData, citiesDataList, setCitiesDataList, computeAppData} = useCoordsData()
 
-    // const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const handleRefresh = () => {
-        // setLoading(true)
-        // computeCitiesData(citiesDataList)
-        // .then(updatedData=>{
-        //     setCitiesDataList(updatedData)
-        //     setLoading(false)
-        // })
-        // .catch(err=>{
-        //     console.log(err)
-        // })
-        computeAppData()    
+        setLoading(true)
+        computeCitiesData(citiesDataList)
+        .then(updatedData=>{
+            setCitiesDataList(updatedData)
+            setLoading(false)
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+        // computeAppData()    
     }
 
     return (
