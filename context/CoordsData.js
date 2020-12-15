@@ -40,7 +40,7 @@ export default function CoordsDataProvider({children}){
     let currCoords = {}
     let currWeatherData = {}
 
-    useEffect(()=>{
+    const computeAppData = () => {
         // AsyncStorage.removeData('citiesData')
         // .then(()=>console.log('cleared'))
         AsyncStorage.getData('citiesData')
@@ -51,7 +51,7 @@ export default function CoordsDataProvider({children}){
             setHomeData(data[0])
             setCitiesDataList(data)
             // console.log(citiesDataList)
-            return computeCitiesData(data)
+            if(citiesDataList) return computeCitiesData(data)
         })
         .then(updatedData=>{
             if(updatedData){
@@ -100,31 +100,34 @@ export default function CoordsDataProvider({children}){
             if(tempData.length>0 && tempData[0].cityName === currCityName){
                 tempData[0].isDefault = true
                 console.log('tempData[0].isDefault',tempData[0].isDefault)
-                // console.log(tempData[0])
+                console.log(Object.keys(tempData[0]))
                 setHomeData(tempData[0])
-                return setCitiesDataList(tempData)
+                setCitiesDataList(tempData)
 
             }
             else{
-                return weatherDataForCoords(currCoords)
+                weatherDataForCoords(currCoords)
+                .then(data=>{
+                    // setCurrWeatherData(data)
+                    currWeatherData = data
+                    const dataToBePushed = {cityName: currCityName, coords: currCoords, weatherData: currWeatherData, isDefault:true}
+                    console.log('tempData in last then block', tempData.map(data=>[data.cityName, data.isDefault]))
+                    if(tempData){
+                        tempData.unshift(dataToBePushed)
+                    }
+                    else{
+                        tempData = [dataToBePushed]
+                    }
+                    
+                    setHomeData(tempData[0])
+                    setCitiesDataList(tempData)
+                    
+                    console.log('reached here after updating default in list')
+                })
+                .catch(err=>{
+                    throw new Error(err)
+                })
             }
-        })
-        .then(data=>{
-            // setCurrWeatherData(data)
-            currWeatherData = data
-            const dataToBePushed = {cityName: currCityName, coords: currCoords, weatherData: currWeatherData, isDefault:true}
-            // console.log('tempData in last then block',tempData)
-            if(tempData){
-                tempData.unshift(dataToBePushed)
-            }
-            else{
-                tempData = [dataToBePushed]
-            }
-            
-            setHomeData(tempData[0])
-            setCitiesDataList(tempData)
-            
-            console.log('reached here after updating default in list')
         })
         .catch(err=>{
             Alert.alert('Error', err.message)
@@ -134,25 +137,121 @@ export default function CoordsDataProvider({children}){
         //     setCitiesDataList(tempData)
         //     setHomeData(tempData[0])
         // }
-    },[])
+    }
 
     // useEffect(()=>{
-    //     if(citiesDataList){
-    //         console.log('citiesDataList CHANGED')
-    //         AsyncStorage.putData('citiesData',citiesDataList)
-    //         .then(()=>{
-    //             console.log('list updated in ansycstorage')
-    //             // AsyncStorage.getData('citiesData')
-    //             // .then(data=>{
-    //             //     const dataToBeLogged = data.map((currItem)=>currItem.cityName)
-    //             //     console.log('logging from storage put data',dataToBeLogged)
-    //             // })
+    //     // AsyncStorage.removeData('citiesData')
+    //     // .then(()=>console.log('cleared'))
+    //     AsyncStorage.getData('citiesData')
+    //     .then(data=>{
+    //         console.log('datalist retrieved from ansycstorage')
+    //         const dataToBeLogged = data.map((currItem)=>currItem.cityName)
+    //         console.log('loggging from storage getdata',dataToBeLogged)
+    //         setHomeData(data[0])
+    //         setCitiesDataList(data)
+    //         // console.log(citiesDataList)
+    //         return computeCitiesData(data)
+    //     })
+    //     .then(updatedData=>{
+    //         if(updatedData){
+    //             console.log('datalist updated',updatedData.map(data=>data.cityName)) 
+    //             tempData = updatedData
+    //             // console.log('tempData from storage block',tempData)
+    //             // updatedData && setCitiesDataList(updatedData)
+    //         }
+    //         return Location.checkForPermission()
+    //     })
+    //     // .catch(err=>{
+    //     //     console.error('err in storage code of useEffect of coordsdata.js',err)
+    //     // })
+    
+    //     // Location.checkForPermission()
+    //     .then(gotPermission=>{
+    //         setPermissionStatus(gotPermission)
+    //         if(gotPermission){
+    //             return Location.getCurrentPositionCoords()
+    //         }
+    //     })
+    //     .then(coords=>{
+    //         // setCurrCoords(coords)
+    //         currCoords = coords
+    //         console.log(coords)
+    //         console.log('currCoords value',currCoords)
+    //         return Location.getCityNameFromCoords(coords)
+    //     })
+    //     .then(cityName=>{
+    //         // tempData = citiesDataList
+    //         // console.log('citiesDataList from checking present city block',citiesDataList)
+    //         console.log(cityName)
+    //         // cityName && setCurrCityName(cityName)
+    //         currCityName = cityName
+    //         console.log('currCityName value',currCityName)
+    //         // make default cond false for each entry so that when current location is accessed then new default will be marked
+    //         // console.log('tempData from checking present city block 1', tempData)
+    //         tempData.forEach(eachData=>{
+    //             eachData.isDefault=false
     //         })
-    //         .catch(err=>{
-    //             console.error('storage putdata error',err.message)
-    //         })
-    //     }
-    // },[citiesDataList])
+    //         console.log('tempData from checking present city block 2', tempData.map(data=>[data.cityName, data.isDefault]))
+    //         // const resultIndex = tempData?tempData.findIndex(cityData => cityData.cityName === cityName):-1
+    //         // console.log('resultIndex',resultIndex)
+    //         // if(resultIndex>=0){
+    //         console.log(tempData.length>0 && tempData[0].cityName === currCityName)
+    //         if(tempData.length>0 && tempData[0].cityName === currCityName){
+    //             tempData[0].isDefault = true
+    //             console.log('tempData[0].isDefault',tempData[0].isDefault)
+    //             // console.log(tempData[0])
+    //             setHomeData(tempData[0])
+    //             return setCitiesDataList(tempData)
+
+    //         }
+    //         else{
+    //             return weatherDataForCoords(currCoords)
+    //         }
+    //     })
+    //     .then(data=>{
+    //         // setCurrWeatherData(data)
+    //         currWeatherData = data
+    //         const dataToBePushed = {cityName: currCityName, coords: currCoords, weatherData: currWeatherData, isDefault:true}
+    //         // console.log('tempData in last then block',tempData)
+    //         if(tempData){
+    //             tempData.unshift(dataToBePushed)
+    //         }
+    //         else{
+    //             tempData = [dataToBePushed]
+    //         }
+            
+    //         setHomeData(tempData[0])
+    //         setCitiesDataList(tempData)
+            
+    //         console.log('reached here after updating default in list')
+    //     })
+    //     .catch(err=>{
+    //         Alert.alert('Error', err.message)
+    //         console.error('err in location code of useEffect of coordsdata.js',err)
+    //     })
+    //     // if(tempData){
+    //     //     setCitiesDataList(tempData)
+    //     //     setHomeData(tempData[0])
+    //     // }
+    // },[])
+
+    useEffect(()=>{
+        if(citiesDataList){
+            console.log('citiesDataList CHANGED')
+            AsyncStorage.putData('citiesData',citiesDataList)
+            .then(()=>{
+                console.log('list updated in ansycstorage')
+                // AsyncStorage.getData('citiesData')
+                // .then(data=>{
+                //     const dataToBeLogged = data.map((currItem)=>currItem.cityName)
+                //     console.log('logging from storage put data',dataToBeLogged)
+                // })
+            })
+            .catch(err=>{
+                console.error('storage putdata error',err.message)
+            })
+        }
+    },[citiesDataList])
 
     const computeDataForCity = async (cityName) => {
         try {
@@ -190,6 +289,7 @@ export default function CoordsDataProvider({children}){
         citiesDataList, setCitiesDataList,
         computeCitiesData,
         homeData, setHomeData,
+        computeAppData,
     }
 
     return(

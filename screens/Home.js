@@ -13,13 +13,11 @@ import { useCoordsData } from '../context/CoordsData'
 export default function Home({navigation}) {
 
     const [visible, setVisible] = useState()
-    const { homeData, setHomeData, citiesDataList, permissionStatus } = useCoordsData()
+    const { homeData, setHomeData, citiesDataList, permissionStatus, computeAppData } = useCoordsData()
 
-    // useEffect(()=>{
-    //     console.log('log from homescreen for citiesDataList', citiesDataList)
-    //     if(citiesDataList)
-    //         setHomeData(citiesDataList[0])
-    // },[citiesDataList])
+    useEffect(()=>{
+        computeAppData()
+    },[])
 
     const handleScroll = (e) => {
         const inset = e.nativeEvent.contentInset
