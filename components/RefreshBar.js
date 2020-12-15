@@ -6,26 +6,27 @@ import { useCoordsData } from '../context/CoordsData'
 
 export default function RefreshBar() {
 
-    const {computeCitiesData, citiesDataList, setCitiesDataList} = useCoordsData()
+    const {computeCitiesData, citiesDataList, setCitiesDataList, computeAppData, loading} = useCoordsData()
 
-    const [loading, setLoading] = useState(false)
+    // const [loading, setLoading] = useState(false)
 
     const handleRefresh = () => {
-        setLoading(true)
-        computeCitiesData(citiesDataList)
-        .then(updatedData=>{
-            setCitiesDataList(updatedData)
-            setLoading(false)
-        })
-        .catch(err=>{
-            console.log(err)
-        })
+        // setLoading(true)
+        // computeCitiesData(citiesDataList)
+        // .then(updatedData=>{
+        //     setCitiesDataList(updatedData)
+        //     setLoading(false)
+        // })
+        // .catch(err=>{
+        //     console.log(err)
+        // })
+        computeAppData()    
     }
 
     return (
         <View style={styles.container} >
             <Text style={styles.title} >Weather App</Text>
-            {loading?<ActivityIndicator size='small' color='white' />:
+            {loading?<ActivityIndicator size={26} color='white' />:
             <Ionicons name="md-refresh" size={26} color="white" onPress={handleRefresh} />}
         </View>
     )

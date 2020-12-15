@@ -4,6 +4,9 @@ import AsyncStorage from '../services/asyncStorageService'
 import Location from '../services/locationService'
 import weatherDataForCoords from '../services/weatherService'
 
+import * as Font from 'expo-font'
+import {AppLoading} from 'expo'
+
 const CoordsData = createContext()
 export function useCoordsData(){
     return useContext(CoordsData)
@@ -30,6 +33,8 @@ export default function CoordsDataProvider({children}){
     // const [currWeatherData, setCurrWeatherData] = useState()
     const [permissionStatus, setPermissionStatus] = useState()
     const [citiesDataList, setCitiesDataList] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [fontsLoaded, setFontsLoaded] = useState(false)
 
     /* since i am not able to implement horizontal sliding view on home screen, i am defining a state that will hold the data to be displayed
        on home page and which can be manipulated from different screens so that user can choose a particular city's data to be displayed */
@@ -40,9 +45,14 @@ export default function CoordsDataProvider({children}){
     let currCoords = {}
     let currWeatherData = {}
 
+    let customFonts = {
+        'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
+      };
+
     const computeAppData = () => {
         // AsyncStorage.removeData('citiesData')
         // .then(()=>console.log('cleared'))
+        setLoading(true)
         AsyncStorage.getData('citiesData')
         .then(data=>{
             console.log('datalist retrieved from ansycstorage')
@@ -133,107 +143,24 @@ export default function CoordsDataProvider({children}){
             Alert.alert('Error', err.message)
             console.error('err in location code of useEffect of coordsdata.js',err)
         })
+        .finally(()=>{
+            setLoading(false)
+        })
         // if(tempData){
         //     setCitiesDataList(tempData)
         //     setHomeData(tempData[0])
         // }
     }
 
-    // useEffect(()=>{
-    //     // AsyncStorage.removeData('citiesData')
-    //     // .then(()=>console.log('cleared'))
-    //     AsyncStorage.getData('citiesData')
-    //     .then(data=>{
-    //         console.log('datalist retrieved from ansycstorage')
-    //         const dataToBeLogged = data.map((currItem)=>currItem.cityName)
-    //         console.log('loggging from storage getdata',dataToBeLogged)
-    //         setHomeData(data[0])
-    //         setCitiesDataList(data)
-    //         // console.log(citiesDataList)
-    //         return computeCitiesData(data)
-    //     })
-    //     .then(updatedData=>{
-    //         if(updatedData){
-    //             console.log('datalist updated',updatedData.map(data=>data.cityName)) 
-    //             tempData = updatedData
-    //             // console.log('tempData from storage block',tempData)
-    //             // updatedData && setCitiesDataList(updatedData)
-    //         }
-    //         return Location.checkForPermission()
-    //     })
-    //     // .catch(err=>{
-    //     //     console.error('err in storage code of useEffect of coordsdata.js',err)
-    //     // })
-    
-    //     // Location.checkForPermission()
-    //     .then(gotPermission=>{
-    //         setPermissionStatus(gotPermission)
-    //         if(gotPermission){
-    //             return Location.getCurrentPositionCoords()
-    //         }
-    //     })
-    //     .then(coords=>{
-    //         // setCurrCoords(coords)
-    //         currCoords = coords
-    //         console.log(coords)
-    //         console.log('currCoords value',currCoords)
-    //         return Location.getCityNameFromCoords(coords)
-    //     })
-    //     .then(cityName=>{
-    //         // tempData = citiesDataList
-    //         // console.log('citiesDataList from checking present city block',citiesDataList)
-    //         console.log(cityName)
-    //         // cityName && setCurrCityName(cityName)
-    //         currCityName = cityName
-    //         console.log('currCityName value',currCityName)
-    //         // make default cond false for each entry so that when current location is accessed then new default will be marked
-    //         // console.log('tempData from checking present city block 1', tempData)
-    //         tempData.forEach(eachData=>{
-    //             eachData.isDefault=false
-    //         })
-    //         console.log('tempData from checking present city block 2', tempData.map(data=>[data.cityName, data.isDefault]))
-    //         // const resultIndex = tempData?tempData.findIndex(cityData => cityData.cityName === cityName):-1
-    //         // console.log('resultIndex',resultIndex)
-    //         // if(resultIndex>=0){
-    //         console.log(tempData.length>0 && tempData[0].cityName === currCityName)
-    //         if(tempData.length>0 && tempData[0].cityName === currCityName){
-    //             tempData[0].isDefault = true
-    //             console.log('tempData[0].isDefault',tempData[0].isDefault)
-    //             // console.log(tempData[0])
-    //             setHomeData(tempData[0])
-    //             return setCitiesDataList(tempData)
+    const loadFontsAsync = async () => {
+        await Font.loadAsync(customFonts);
+        console.log('fonts loaded')
+        setFontsLoaded(true)
+      }
 
-    //         }
-    //         else{
-    //             return weatherDataForCoords(currCoords)
-    //         }
-    //     })
-    //     .then(data=>{
-    //         // setCurrWeatherData(data)
-    //         currWeatherData = data
-    //         const dataToBePushed = {cityName: currCityName, coords: currCoords, weatherData: currWeatherData, isDefault:true}
-    //         // console.log('tempData in last then block',tempData)
-    //         if(tempData){
-    //             tempData.unshift(dataToBePushed)
-    //         }
-    //         else{
-    //             tempData = [dataToBePushed]
-    //         }
-            
-    //         setHomeData(tempData[0])
-    //         setCitiesDataList(tempData)
-            
-    //         console.log('reached here after updating default in list')
-    //     })
-    //     .catch(err=>{
-    //         Alert.alert('Error', err.message)
-    //         console.error('err in location code of useEffect of coordsdata.js',err)
-    //     })
-    //     // if(tempData){
-    //     //     setCitiesDataList(tempData)
-    //     //     setHomeData(tempData[0])
-    //     // }
-    // },[])
+    useEffect(()=>{
+        loadFontsAsync()
+    },[])
 
     useEffect(()=>{
         if(citiesDataList){
@@ -290,9 +217,10 @@ export default function CoordsDataProvider({children}){
         computeCitiesData,
         homeData, setHomeData,
         computeAppData,
+        loading,
     }
 
-    return(
+    return !fontsLoaded?<AppLoading/>:(
         <CoordsData.Provider value={values}>
             {citiesDataList && children}
         </CoordsData.Provider>

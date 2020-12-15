@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     temperature__text: {
         color: 'white',
         fontSize: 93,
-        fontWeight:'normal'
+        fontFamily:'Roboto-Light'
     },
     moreDetails__feels: {
         fontSize: 20,

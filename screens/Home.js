@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Alert, RefreshControl } from 'react-native';
 import Header from '../components/Header'
 import LocationHeader from '../components/LocationHeader'
 import CurrentWeatherDetails from '../components/CurrentWeatherDetails'
@@ -13,7 +13,7 @@ import { useCoordsData } from '../context/CoordsData'
 export default function Home({navigation}) {
 
     const [visible, setVisible] = useState()
-    const { homeData, setHomeData, citiesDataList, permissionStatus, computeAppData } = useCoordsData()
+    const { homeData, setHomeData, citiesDataList, permissionStatus, computeAppData, loading } = useCoordsData()
 
     useEffect(()=>{
         computeAppData()
@@ -49,7 +49,9 @@ export default function Home({navigation}) {
                 } > { homeData.weatherData.currentWeatherData.dateTimeString } </Text>
                 <ScrollView style={{ width: '100%' }} showsVerticalScrollIndicator={false}
                     onScrollBeginDrag={() => setVisible('none')}
-                    onScrollEndDrag={handleScroll}>
+                    onScrollEndDrag={handleScroll}
+                    refreshControl={<RefreshControl refreshing={loading} onRefresh={()=>computeAppData()} colors={['blue','darkgreen']} />}
+                >
                     <CurrentWeatherDetails
                         currentWeatherData = {homeData.weatherData.currentWeatherData}
                         dailyWeatherData = {homeData.weatherData.dailyWeatherData}
