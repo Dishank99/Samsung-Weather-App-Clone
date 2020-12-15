@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Modal, Button, TouchableWithoutFeedback } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import MenuModal from '../shared/MenuModal'
+import MenuModal from './MenuModal'
 
 export default function Header(props) {
     const [menuVisible, setMenuVisible] = useState(false)

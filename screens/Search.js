@@ -10,21 +10,6 @@ import Map from '../components/Map'
 import { useCoordsData } from '../context/CoordsData'
 import Location from '../services/locationService'
 import weatherDataForCoords from '../services/weatherService'
-import { Children } from 'react';
-
-// import cityList from '../city_list.json'
-
-const getCities = () => {
-    let data = null
-    return new Promise((resolve, reject)=>{
-        try{
-            data = JSON.parse(cityList)
-            resolve(data)
-        } catch (err){
-            reject(err.message)
-        }
-    })
-}
 
 export function SearchScreenHeader(props) {
     const [menuVisible, setMenuVisible] = useState(false)
@@ -95,7 +80,7 @@ export default function Search(props) {
     //     setSuggestions(cities.filter(city => city.name.indexOf(inputText)>=0))
     // },[inputText])
 
-    const { citiesDataList } = useCoordsData()
+    const { citiesDataList, citiesList } = useCoordsData()
 
     const {defaultCoords} = useCoordsData()
     const [coords, setCoords] = useState({latitude:19.21667, longitude:73.08333})
@@ -103,10 +88,10 @@ export default function Search(props) {
     const [city, setCity] = useState()
 
     useEffect(()=>{
-        if(citiesDataList){
-            setCoords(citiesDataList[0].coords)
-            setWeatherData(citiesDataList[0].weatherData)
-            setCity(citiesDataList[0].cityName)
+        if(citiesList && citiesDataList){
+            setCity(citiesList[0])
+            setCoords(citiesDataList[citiesList[0]].coords)
+            setWeatherData(citiesDataList[citiesList[0]].weatherData)
         }
     },[])
 

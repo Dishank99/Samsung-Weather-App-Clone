@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Alert, RefreshControl } from 'react-native';
 import Header from '../components/Header'
 import LocationHeader from '../components/LocationHeader'
 import CurrentWeatherDetails from '../components/CurrentWeatherDetails'
@@ -10,16 +10,28 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import { useCoordsData } from '../context/CoordsData'
 
+
+
 export default function Home({navigation}) {
 
     const [visible, setVisible] = useState()
-    const { homeData, setHomeData, citiesDataList, permissionStatus } = useCoordsData()
+    const { homeData, setHomeData, citiesList, citiesDataList, permissionStatus, computeAppData, loading } = useCoordsData()
 
     // useEffect(()=>{
     //     console.log('log from homescreen for citiesDataList', citiesDataList)
     //     if(citiesDataList)
     //         setHomeData(citiesDataList[0])
     // },[citiesDataList])
+
+    useEffect(()=>{
+        !homeData && computeAppData()
+    },[])
+
+    
+
+    const onRefresh = () => {
+        computeAppData()
+    }
 
     const handleScroll = (e) => {
         const inset = e.nativeEvent.contentInset
@@ -39,7 +51,6 @@ export default function Home({navigation}) {
                 onPressLocation={() => navigation.push('Locations')}
                 onPressSearch={() => navigation.push('Search')}
             />
-            
             {homeData && <React.Fragment>
                 <LocationHeader isDefault={homeData.isDefault} permissionGiven={permissionStatus} city={homeData.cityName}/>
                 <Text style={
@@ -51,14 +62,17 @@ export default function Home({navigation}) {
                 } > { homeData.weatherData.currentWeatherData.dateTimeString } </Text>
                 <ScrollView style={{ width: '100%' }} showsVerticalScrollIndicator={false}
                     onScrollBeginDrag={() => setVisible('none')}
-                    onScrollEndDrag={handleScroll}>
+                    onScrollEndDrag={handleScroll}
+                    refreshControl={<RefreshControl refreshing={loading} onRefresh={onRefresh} colors={['blue', 'darkgreen']} />}
+                    >
                     <CurrentWeatherDetails
                         currentWeatherData = {homeData.weatherData.currentWeatherData}
                         dailyWeatherData = {homeData.weatherData.dailyWeatherData}
                         hourlyWeatherData = {homeData.weatherData.hourlyWeatherData}
                     />
                 </ScrollView>
-            </React.Fragment>}
+            </React.Fragment>
+            }
         </View>
     );
 }

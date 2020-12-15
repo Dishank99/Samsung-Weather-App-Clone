@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Modal, TouchableWithoutFeedback, StatusBar, Fla
 
 import { Ionicons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import MenuModal from '../shared/MenuModal'
+import MenuModal from '../components/MenuModal'
 import ListItem from '../components/ListItem'
 import RefreshBar from '../components/RefreshBar'
 
@@ -35,14 +35,16 @@ export function LocationScreenHeader(props) {
 
 export default function Location({navigation}) {
     
-    const {citiesDataList, permissionStatus, setHomeData} = useCoordsData()
+    const {citiesDataList, permissionStatus, setHomeData, citiesList} = useCoordsData()
 
     const [data, setData] = useState()
 
     useEffect(()=>{
             setData(
-                citiesDataList.map((eachData, index)=>{
-                    const { cityName, weatherData, isDefault } = eachData
+                citiesList.map((cityName, index)=>{
+                    const eachData = citiesDataList[cityName]
+                    const isDefault = index==0
+                    const { weatherData } = eachData
                     const {dateTimeString, temp, icon, description} = weatherData.currentWeatherData
                     const { temp:maxMintemp } = weatherData.dailyWeatherData[0]
                     const [maxTemp, minTemp] = [maxMintemp[0],maxMintemp[1]]
@@ -50,10 +52,10 @@ export default function Location({navigation}) {
                     return { index, cityName, isDefault, dateTimeString, temp, icon, maxTemp, minTemp, description }
                 })
             )
-    },[])
+    },[citiesList, citiesDataList])
 
-    const handlePressed = (index) => {
-        setHomeData(citiesDataList[index])
+    const handlePressed = (city) => {
+        setHomeData({cityName: city, ...citiesDataList[city]})
         navigation.navigate('Home')
     }
     

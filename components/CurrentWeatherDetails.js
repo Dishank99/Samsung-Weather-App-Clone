@@ -6,6 +6,7 @@ import DetailsCard from './DetailsCard';
 import TimelyWeatherDetails from './TimelyWeatherDetails'
 import WeatherIcon from './WeatherIcon'
 
+
 export default function CurrentWeatherDetails({ currentWeatherData, dailyWeatherData, hourlyWeatherData }) {
 
     const DATA = [
@@ -56,6 +57,7 @@ export default function CurrentWeatherDetails({ currentWeatherData, dailyWeather
     //         setUvi(details.currentWeatherData.uvi)
     //     }
     // },[details])
+
 
     return (
         <View style={styles.container} >
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
     temperature__text: {
         color: 'white',
         fontSize: 93,
-        fontWeight:'normal'
+        fontFamily:'Roboto-Light',
     },
     moreDetails__feels: {
         fontSize: 20,

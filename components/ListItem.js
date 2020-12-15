@@ -28,7 +28,7 @@ export default function ListItem({item, permissionStatus, onPressedHandler}){
 
     const iconString = permissionStatus?'location-on':'location-off'
     return (
-        <TouchableOpacity onPress={()=>onPressedHandler(item.index)}>
+        <TouchableOpacity onPress={()=>onPressedHandler(item.cityName)}>
         <View style={styles.details__container}>
             <View style={styles.placeAndTime}>
                 <Text style={styles.mainText}>

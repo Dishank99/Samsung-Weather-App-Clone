@@ -5,7 +5,7 @@ import { useCoordsData } from '../context/CoordsData'
 
 export default function CityDetailBlock({city, coords, weatherData, navigation}){
 
-    const { citiesDataList, setCitiesDataList, setHomeData } = useCoordsData()
+    const { citiesList, setCitiesList, citiesDataList, setCitiesDataList, setHomeData, storeDataInCache } = useCoordsData()
 
     // const [data, setData] = useState()
 
@@ -18,25 +18,29 @@ export default function CityDetailBlock({city, coords, weatherData, navigation})
     // }, [weatherData])
 
     const isCityPresentInList = (cityName) => {
-        const result = citiesDataList.find(cityData=> cityData.cityName === cityName)
+        const result = citiesList.includes(cityName)
         return result?true:false
     }
 
     const handleAdd = () => {
-        setCitiesDataList(currCityDataList=>{
-            const newData = {
-                cityName:city,
-                coords,
-                weatherData,
-                isDefault:false,
-            }
-            return [...currCityDataList, newData]
-        })
+        const newCitiesList = [...citiesList, city]
+        let newCitiesDataList = citiesDataList
+        newCitiesDataList[city] = {coords, weatherData}
+        setCitiesList(newCitiesList)
+        setCitiesDataList(newCitiesDataList)
+        // setCitiesDataList(currCityDataList => {
+        //     // return {...currCityDataList, [city]:{coords, weatherData}}
+        //     currCityDataList[city]={coords, weatherData}
+        //     // console.log('currCityDataList',currCityDataList)
+        //     return currCityDataList
+        // })
+        storeDataInCache(newCitiesList, newCitiesDataList)
+        console.log('citiesDataList[city]',Object.keys(citiesDataList))
     }
 
     const handleDetails = () => {
         // const cityDataObject = citiesDataList.find(cityData => cityData.cityName === city)
-        setHomeData(citiesDataList[citiesDataList.length-1])
+        setHomeData({cityName:city, ...citiesDataList[city]})
         navigation.navigate('Home')
     }
 
@@ -63,7 +67,7 @@ export default function CityDetailBlock({city, coords, weatherData, navigation})
                 </View>
             </View>
             <View style={styles.options}>
-                {citiesDataList && isCityPresentInList(city)?
+                {citiesList && isCityPresentInList(city)?
                     <Text style={{fontSize:20, color:'blue', fontWeight:'bold'}} onPress={handleDetails} >Details</Text>:
                     <Text style={{fontSize:20, color:'blue', fontWeight:'bold'}} onPress={handleAdd} >Add</Text>}
             </View>
@@ -87,7 +91,8 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         alignItems:'center',
         justifyContent:'space-between',
-        borderRadius:18,
+        borderBottomStartRadius:18,
+        borderBottomEndRadius:18,
         paddingHorizontal:'7%',
         paddingVertical:'2%',
         backgroundColor:'white',
