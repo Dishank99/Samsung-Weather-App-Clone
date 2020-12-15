@@ -4,7 +4,7 @@ import AsyncStorage from '../services/asyncStorageService'
 import Location from '../services/locationService'
 import weatherDataForCoords from '../services/weatherService'
 
-import * as Font from 'expo-font'
+
 import {AppLoading} from 'expo'
 
 const CoordsData = createContext()
@@ -34,7 +34,6 @@ export default function CoordsDataProvider({children}){
     const [permissionStatus, setPermissionStatus] = useState()
     const [citiesDataList, setCitiesDataList] = useState([])
     const [loading, setLoading] = useState(true)
-    const [fontsLoaded, setFontsLoaded] = useState(false)
 
     /* since i am not able to implement horizontal sliding view on home screen, i am defining a state that will hold the data to be displayed
        on home page and which can be manipulated from different screens so that user can choose a particular city's data to be displayed */
@@ -45,9 +44,7 @@ export default function CoordsDataProvider({children}){
     let currCoords = {}
     let currWeatherData = {}
 
-    let customFonts = {
-        'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
-      };
+    
 
     const computeAppData = () => {
         // AsyncStorage.removeData('citiesData')
@@ -152,15 +149,7 @@ export default function CoordsDataProvider({children}){
         // }
     }
 
-    const loadFontsAsync = async () => {
-        await Font.loadAsync(customFonts);
-        console.log('fonts loaded')
-        setFontsLoaded(true)
-      }
-
-    useEffect(()=>{
-        loadFontsAsync()
-    },[])
+    
 
     useEffect(()=>{
         if(citiesDataList){
@@ -222,7 +211,7 @@ export default function CoordsDataProvider({children}){
 
     return (
         <CoordsData.Provider value={values}>
-            {fontsLoaded && citiesDataList && children}
+            { citiesDataList && children}
         </CoordsData.Provider>
     )
 } 

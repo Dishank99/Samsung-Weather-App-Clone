@@ -7,6 +7,7 @@ import Location from '../services/locationService'
 import weatherDataForCoords from '../services/weatherService'
 import AsyncStorage from '../services/asyncStorageService'
 import { MaterialIcons } from '@expo/vector-icons';
+import * as Font from 'expo-font'
 
 import { useCoordsData } from '../context/CoordsData'
 
@@ -14,6 +15,21 @@ export default function Home({navigation}) {
 
     const [visible, setVisible] = useState()
     const { homeData, setHomeData, citiesDataList, permissionStatus, computeAppData, loading } = useCoordsData()
+    const [fontsLoaded, setFontsLoaded] = useState(false)
+
+    let customFonts = {
+        'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
+    };
+
+    const loadFontsAsync = async () => {
+        await Font.loadAsync(customFonts);
+        console.log('fonts loaded')
+        setFontsLoaded(true)
+    }
+
+    useEffect(()=>{
+        loadFontsAsync()
+    },[])
 
     useEffect(()=>{
         computeAppData()
@@ -38,7 +54,7 @@ export default function Home({navigation}) {
                 onPressSearch={() => navigation.push('Search')}
             />
             
-            {homeData && <React.Fragment>
+            {fontsLoaded && homeData && <React.Fragment>
                 <LocationHeader isDefault={homeData.isDefault} permissionGiven={permissionStatus} city={homeData.cityName}/>
                 <Text style={
                     [
