@@ -50,7 +50,7 @@ export default function Location({navigation}) {
                     return { index, cityName, isDefault, dateTimeString, temp, icon, maxTemp, minTemp, description }
                 })
             )
-    },[])
+    },[citiesDataList])
 
     const handlePressed = (index) => {
         setHomeData(citiesDataList[index])
