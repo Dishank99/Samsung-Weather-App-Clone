@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "SamsungWeatherAppClone",
+    "name": "Samsung Weather App Clone",
     "slug": "SamsungWeatherAppClone",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -21,6 +21,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "",
+    "githubUrl": "https://github.com/Dishank99/Samsung-Weather-App-Clone"
   }
 }

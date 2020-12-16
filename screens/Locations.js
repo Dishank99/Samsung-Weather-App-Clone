@@ -53,6 +53,7 @@ export default function Location({navigation}) {
     },[citiesDataList])
 
     const handlePressed = (index) => {
+        console.log(citiesDataList[index].weatherData.currentWeatherData.temp)
         setHomeData(citiesDataList[index])
         navigation.navigate('Home')
     }

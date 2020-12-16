@@ -39,14 +39,15 @@ export default function CoordsDataProvider({children}){
        on home page and which can be manipulated from different screens so that user can choose a particular city's data to be displayed */
     const [homeData, setHomeData] = useState()
 
-    let tempData = []
-    let currCityName = ''
-    let currCoords = {}
-    let currWeatherData = {}
+    
 
     
 
     const computeAppData = () => {
+        let tempData = []
+        let currCityName = ''
+        let currCoords = {}
+        let currWeatherData = {}
         // AsyncStorage.removeData('citiesData')
         // .then(()=>console.log('cleared'))
         setLoading(true)
@@ -55,8 +56,9 @@ export default function CoordsDataProvider({children}){
             console.log('datalist retrieved from ansycstorage')
             const dataToBeLogged = data.map((currItem)=>currItem.cityName)
             console.log('loggging from storage getdata',dataToBeLogged)
-            setHomeData(data[0])
-            setCitiesDataList(data)
+            // setHomeData(data[0])
+            // setCitiesDataList(data)
+            tempData = data
             // console.log(citiesDataList)
             if(citiesDataList) return computeCitiesData(data)
         })
@@ -108,8 +110,8 @@ export default function CoordsDataProvider({children}){
                 tempData[0].isDefault = true
                 console.log('tempData[0].isDefault',tempData[0].isDefault)
                 console.log(Object.keys(tempData[0]))
-                setHomeData(tempData[0])
-                setCitiesDataList(tempData)
+                // setHomeData(tempData[0])
+                // setCitiesDataList(tempData)
 
             }
             else{
@@ -126,8 +128,8 @@ export default function CoordsDataProvider({children}){
                         tempData = [dataToBePushed]
                     }
                     
-                    setHomeData(tempData[0])
-                    setCitiesDataList(tempData)
+                    // setHomeData(tempData[0])
+                    // setCitiesDataList(tempData)
                     
                     console.log('reached here after updating default in list')
                 })
@@ -141,6 +143,8 @@ export default function CoordsDataProvider({children}){
             console.error('err in location code of useEffect of coordsdata.js',err)
         })
         .finally(()=>{
+            setHomeData(tempData[0])
+            setCitiesDataList(tempData)
             setLoading(false)
         })
         // if(tempData){
