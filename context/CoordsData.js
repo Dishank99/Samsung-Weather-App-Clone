@@ -56,7 +56,7 @@ export default function CoordsDataProvider({children}){
             console.log('datalist retrieved from ansycstorage')
             const dataToBeLogged = data.map((currItem)=>currItem.cityName)
             console.log('loggging from storage getdata',dataToBeLogged)
-            // setHomeData(data[0])
+            setHomeData(data[0])
             // setCitiesDataList(data)
             tempData = data
             // console.log(citiesDataList)
