@@ -62,6 +62,8 @@ export default function Location({navigation}) {
         <View style={{flex:1}} >
             <View style={styles.container}>
                 <FlatList
+                    contentContainerStyle={{paddingBottom:20,}}
+                    showsVerticalScrollIndicator={false}
                     data={data}//data
                     renderItem={({item})=><ListItem item={item} permissionStatus={permissionStatus} onPressedHandler={handlePressed}/>}
                     ItemSeparatorComponent={() => (

@@ -110,8 +110,8 @@ export default function CoordsDataProvider({children}){
                 tempData[0].isDefault = true
                 console.log('tempData[0].isDefault',tempData[0].isDefault)
                 console.log(Object.keys(tempData[0]))
-                // setHomeData(tempData[0])
-                // setCitiesDataList(tempData)
+                setHomeData(tempData[0])
+                setCitiesDataList(tempData)
 
             }
             else{
@@ -128,8 +128,8 @@ export default function CoordsDataProvider({children}){
                         tempData = [dataToBePushed]
                     }
                     
-                    // setHomeData(tempData[0])
-                    // setCitiesDataList(tempData)
+                    setHomeData(tempData[0])
+                    setCitiesDataList(tempData)
                     
                     console.log('reached here after updating default in list')
                 })
@@ -143,8 +143,8 @@ export default function CoordsDataProvider({children}){
             console.error('err in location code of useEffect of coordsdata.js',err)
         })
         .finally(()=>{
-            setHomeData(tempData[0])
-            setCitiesDataList(tempData)
+            // setHomeData(tempData[0])
+            // setCitiesDataList(tempData)
             setLoading(false)
         })
         // if(tempData){
