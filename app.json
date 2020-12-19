@@ -22,7 +22,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "",
+    "description": "This is the latest stable version for Samsung Weather App Clone with features of Dispalying Weather Data of current Location, adding and saving cities to track their Weather.",
     "githubUrl": "https://github.com/Dishank99/Samsung-Weather-App-Clone"
   }
 }

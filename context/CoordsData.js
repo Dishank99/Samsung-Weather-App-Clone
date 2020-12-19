@@ -48,9 +48,13 @@ export default function CoordsDataProvider({children}){
         let currCityName = ''
         let currCoords = {}
         let currWeatherData = {}
-        // AsyncStorage.removeData('citiesData')
-        // .then(()=>console.log('cleared'))
+        
         setLoading(true)
+        // AsyncStorage.removeData('citiesData')
+        // .then(()=>{
+        //     console.log('cleared')
+        //     return AsyncStorage.getData('citiesData')
+        // })
         AsyncStorage.getData('citiesData')
         .then(data=>{
             console.log('datalist retrieved from ansycstorage')
@@ -102,11 +106,17 @@ export default function CoordsDataProvider({children}){
                 eachData.isDefault=false
             })
             console.log('tempData from checking present city block 2', tempData.map(data=>[data.cityName, data.isDefault]))
-            // const resultIndex = tempData?tempData.findIndex(cityData => cityData.cityName === cityName):-1
-            // console.log('resultIndex',resultIndex)
-            // if(resultIndex>=0){
-            console.log(tempData.length>0 && tempData[0].cityName === currCityName)
-            if(tempData.length>0 && tempData[0].cityName === currCityName){
+            const resultIndex = tempData.length>0?tempData.findIndex(cityData => cityData.cityName === cityName):-1
+            console.log('resultIndex',resultIndex)
+            if(resultIndex>=0){
+            // console.log(tempData.length>0 && tempData[0].cityName === currCityName)
+            // if(tempData.length>0 && tempData[0].cityName === currCityName){
+                const dataToBePushed = tempData[resultIndex]
+                tempData.splice(resultIndex,1)
+                console.log('tempData after splicing',tempData.map(data=>[data.cityName]))
+                console.log('dataTOBEPushed', dataToBePushed.cityName)
+                tempData.unshift(dataToBePushed)
+                console.log('tempData after insertion',tempData.map(data=>[data.cityName]))
                 tempData[0].isDefault = true
                 console.log('tempData[0].isDefault',tempData[0].isDefault)
                 console.log(Object.keys(tempData[0]))
