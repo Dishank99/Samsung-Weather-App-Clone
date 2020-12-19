@@ -114,7 +114,7 @@ export default function CoordsDataProvider({children}){
                 const dataToBePushed = tempData[resultIndex]
                 tempData.splice(resultIndex,1)
                 console.log('tempData after splicing',tempData.map(data=>[data.cityName]))
-                console.log('dataTOBEPushed', dataToBePushed)
+                console.log('dataTOBEPushed', dataToBePushed.cityName)
                 tempData.unshift(dataToBePushed)
                 console.log('tempData after insertion',tempData.map(data=>[data.cityName]))
                 tempData[0].isDefault = true
