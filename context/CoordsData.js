@@ -98,7 +98,7 @@ export default function CoordsDataProvider({children}){
             // console.log('citiesDataList from checking present city block',citiesDataList)
             console.log(cityName)
             // cityName && setCurrCityName(cityName)
-            currCityName = cityName
+            currCityName = cityName.trim().toLowerCase()
             console.log('currCityName value',currCityName)
             // make default cond false for each entry so that when current location is accessed then new default will be marked
             // console.log('tempData from checking present city block 1', tempData)
@@ -106,7 +106,7 @@ export default function CoordsDataProvider({children}){
                 eachData.isDefault=false
             })
             console.log('tempData from checking present city block 2', tempData.map(data=>[data.cityName, data.isDefault]))
-            const resultIndex = tempData.length>0?tempData.findIndex(cityData => cityData.cityName === cityName):-1
+            const resultIndex = tempData.length>0?tempData.findIndex(cityData => cityData.cityName === currCityName):-1
             console.log('resultIndex',resultIndex)
             if(resultIndex>=0){
             // console.log(tempData.length>0 && tempData[0].cityName === currCityName)
