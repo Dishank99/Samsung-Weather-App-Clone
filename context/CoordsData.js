@@ -57,51 +57,42 @@ export default function CoordsDataProvider({children}){
         // })
         AsyncStorage.getData('citiesData')
         .then(data=>{
+            // getting data from storage
             console.log('datalist retrieved from ansycstorage')
             const dataToBeLogged = data.map((currItem)=>currItem.cityName)
             console.log('loggging from storage getdata',dataToBeLogged)
             setHomeData(data[0])
-            // setCitiesDataList(data)
             tempData = data
-            // console.log(citiesDataList)
             if(citiesDataList) return computeCitiesData(data)
         })
         .then(updatedData=>{
+            // updating the weather data and replacing
             if(updatedData){
                 console.log('datalist updated',updatedData.map(data=>data.cityName)) 
                 tempData = updatedData
-                // console.log('tempData from storage block',tempData)
-                // updatedData && setCitiesDataList(updatedData)
             }
             return Location.checkForPermission()
         })
-        // .catch(err=>{
-        //     console.error('err in storage code of useEffect of coordsdata.js',err)
-        // })
-    
-        // Location.checkForPermission()
         .then(gotPermission=>{
+            //getting location permission
             setPermissionStatus(gotPermission)
             if(gotPermission){
                 return Location.getCurrentPositionCoords()
             }
         })
         .then(coords=>{
-            // setCurrCoords(coords)
+            // getting city from location
             currCoords = coords
             console.log(coords)
             console.log('currCoords value',currCoords)
             return Location.getCityNameFromCoords(coords)
         })
         .then(cityName=>{
-            // tempData = citiesDataList
-            // console.log('citiesDataList from checking present city block',citiesDataList)
+            //main logic
             console.log(cityName)
-            // cityName && setCurrCityName(cityName)
             currCityName = cityName.trim().toLowerCase()
             console.log('currCityName value',currCityName)
             // make default cond false for each entry so that when current location is accessed then new default will be marked
-            // console.log('tempData from checking present city block 1', tempData)
             tempData.forEach(eachData=>{
                 eachData.isDefault=false
             })
@@ -109,22 +100,17 @@ export default function CoordsDataProvider({children}){
             const resultIndex = tempData.length>0?tempData.findIndex(cityData => cityData.cityName === currCityName):-1
             console.log('resultIndex',resultIndex)
             if(resultIndex>=0){
-            // console.log(tempData.length>0 && tempData[0].cityName === currCityName)
-            // if(tempData.length>0 && tempData[0].cityName === currCityName){
+                // if city already present then replace it and more to top
                 const dataToBePushed = tempData[resultIndex]
                 tempData.splice(resultIndex,1)
-                console.log('tempData after splicing',tempData.map(data=>[data.cityName]))
-                console.log('dataTOBEPushed', dataToBePushed.cityName)
                 tempData.unshift(dataToBePushed)
-                console.log('tempData after insertion',tempData.map(data=>[data.cityName]))
                 tempData[0].isDefault = true
-                console.log('tempData[0].isDefault',tempData[0].isDefault)
-                console.log(Object.keys(tempData[0]))
                 setHomeData(tempData[0])
                 setCitiesDataList(tempData)
 
             }
             else{
+                // if city not present in list
                 weatherDataForCoords(currCoords)
                 .then(data=>{
                     // setCurrWeatherData(data)
@@ -166,6 +152,7 @@ export default function CoordsDataProvider({children}){
     
 
     useEffect(()=>{
+        // for updating storage evey time list is changed
         if(citiesDataList){
             console.log('citiesDataList CHANGED')
             AsyncStorage.putData('citiesData',citiesDataList)

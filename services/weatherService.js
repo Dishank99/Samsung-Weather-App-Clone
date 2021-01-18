@@ -36,12 +36,14 @@ function getDateTimeFromDt(dt){
 
 async function fetchWeatherData ({latitude, longitude}){
    // fetches weather data from api
-   const URL = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely&appid=${APIKEY}`
-   const response = await fetch(URL)
-   const data = await response.json()
-   console.log('called')
-   // console.log(data)
-   return data
+    try{
+        const URL = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely&appid=${APIKEY}`
+        const response = await fetch(URL)
+        const data = await response.json()
+        console.log('called')
+        // console.log(data)
+        return data
+    } catch (e) {throw new Error(e)}
 }
 
 function getCurrentWeatherData(data){
