@@ -13,3 +13,6 @@ Updating Weathers of Existing City in Location Screen
 
 ![List are persistent even on reopening the app](demo/4.gif)
 List are persistent even on reopening the app
+
+![Deleting a City from the List](demo/5.gif)
+Deleting a City from the List. User Cannot delete currently located city from list.
