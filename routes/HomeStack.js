@@ -18,11 +18,7 @@ const Screens = {
     },
     Locations: {
         screen: Locations,
-        navigationOptions: ({ navigation }) => {
-            return {
-                header: () => <LocationScreenHeader navigation={navigation} />
-            }
-        }
+        navigationOptions:{headerShown:false},
 
     },
     Search: {

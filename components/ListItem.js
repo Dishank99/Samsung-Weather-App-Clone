@@ -5,8 +5,9 @@ import weatherDataForCoords from '../services/weatherService'
 import { MaterialIcons } from '@expo/vector-icons';
 import WeatherIcon from '../components/WeatherIcon'
 import { useCoordsData } from '../context/CoordsData'
+import CheckBox from '@react-native-community/checkbox';
 
-export default function ListItem({item, permissionStatus, onPressedHandler}){
+export default function ListItem({item, permissionStatus, onPressedHandler, onLongPressHandler, isDeleting, selectionHandler}){
 
     // const [cityData, setCityData] = useState({dateTimeString:'d', temp:1, maxTemp:1, minTemp:1})
 
@@ -27,9 +28,24 @@ export default function ListItem({item, permissionStatus, onPressedHandler}){
     // },[cityName])
 
     const iconString = permissionStatus?'location-on':'location-off'
+
+    const [checkBoxCurrentValue, setCheckBoxCurrentValue] = useState()
+
+    const onMarkedHandler = (newMarkingValue) => {
+        selectionHandler(item.index, newMarkingValue)
+        console.log('newMarkingValue',newMarkingValue)
+        setCheckBoxCurrentValue(newMarkingValue)
+    }
+    
     return (
-        <TouchableOpacity onPress={()=>onPressedHandler(item.index)}>
+        <TouchableOpacity onLongPress={()=>onLongPressHandler()} disabled={isDeleting} onPress={()=>onPressedHandler(item.index)}>
         <View style={styles.details__container}>
+            {isDeleting && <CheckBox
+                disabled={item.isDefault?true:false}
+                value={checkBoxCurrentValue}
+                onValueChange={onMarkedHandler}
+                tintColors={{true:'#0CAFFF'}}
+            />}
             <View style={styles.placeAndTime}>
                 <Text style={styles.mainText}>
                     {item.isDefault && <MaterialIcons name={iconString} size={16} color="black" style={styles.icon} />}
