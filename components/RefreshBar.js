@@ -34,8 +34,8 @@ export default function RefreshBar() {
 
 const styles = StyleSheet.create({
     container:{
-        position:'absolute',
-        bottom:0,
+        // position:'absolute',
+        // bottom:0,
         zIndex:3,
         backgroundColor:'lightgrey',
         flex:1,

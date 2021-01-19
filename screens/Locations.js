@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, Modal, TouchableWithoutFeedback, StatusBar, FlatList } from 'react-native'
+import { View, Text, StyleSheet, Modal, TouchableWithoutFeedback, StatusBar, FlatList, BackHandler } from 'react-native'
+import CheckBox from '@react-native-community/checkbox';
 
 import { Ionicons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import MenuModal from '../shared/MenuModal'
 import ListItem from '../components/ListItem'
 import RefreshBar from '../components/RefreshBar'
+import { AntDesign } from '@expo/vector-icons';
 
 import { useCoordsData } from '../context/CoordsData'
 import LocationService from '../services/locationService'
 import weatherDataForCoords from '../services/weatherService'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 export function LocationScreenHeader(props) {
@@ -33,11 +36,69 @@ export function LocationScreenHeader(props) {
     )
 }
 
+function DeleteSelectionHeader({areAllSelected}){
+
+    const [checkBoxCurrentValue, setCheckBoxCurrentValue] = useState(false)
+    const [noOfItemsSelected, setNoOfItemsSelected] = useState(0)
+
+    useEffect(()=>{
+        setCheckBoxCurrentValue(areAllSelected)
+    },[areAllSelected])
+
+    useEffect(()=>{
+        if(checkBoxCurrentValue === true){
+            setNoOfItemsSelected('All')
+        }
+        else{
+            setNoOfItemsSelected(0)
+        }
+    },[checkBoxCurrentValue])
+
+    const onMarkedHandler = (newMarkingValue) => {
+        setCheckBoxCurrentValue(newMarkingValue)
+        if(newMarkingValue === true){
+            selectAll()
+        }
+        else{
+            // deselectAll()
+        }
+    }
+
+    return (
+        <View style={styles.header}>
+            <View style={{alignItems:'center'}}>
+                <CheckBox
+                    disabled={true}
+                    value={checkBoxCurrentValue}
+                    onValueChange={onMarkedHandler}
+                    tintColors={{true:'#0CAFFF'}}
+                    style={{borderWidth:5}}
+                />
+                <Text style={{fontSize:12}}>{noOfItemsSelected}</Text>
+            </View>
+            <Text style={{fontSize:20,flexGrow:1, marginLeft:15}}>{noOfItemsSelected} Selected</Text>
+        </View>
+    )
+}
+
+function DeleteFooter({onPress}){
+    return (
+        <TouchableOpacity onPress={()=>onPress()}>
+            <View style={{paddingVertical:10, alignItems:'center'}}>
+                <AntDesign name="delete" size={24} color="black" />
+                <Text style={{fontSize:12}} >Delete</Text>
+            </View>
+        </TouchableOpacity>
+    )
+}
+
 export default function Location({navigation}) {
     
-    const {citiesDataList, permissionStatus, setHomeData} = useCoordsData()
+    const {citiesDataList, setCitiesDataList, permissionStatus, setHomeData} = useCoordsData()
 
     const [data, setData] = useState()
+
+    const [isDeleting, setIsDeleting] = useState(false)
 
     useEffect(()=>{
             setData(
@@ -47,7 +108,7 @@ export default function Location({navigation}) {
                     const { temp:maxMintemp } = weatherData.dailyWeatherData[0]
                     const [maxTemp, minTemp] = [maxMintemp[0],maxMintemp[1]]
     
-                    return { index, cityName, isDefault, dateTimeString, temp, icon, maxTemp, minTemp, description }
+                    return { index, cityName, isDefault, dateTimeString, temp, icon, maxTemp, minTemp, description, isSelected:false }
                 })
             )
     },[citiesDataList])
@@ -58,23 +119,60 @@ export default function Location({navigation}) {
         navigation.navigate('Home')
     }
     
+    const handleLongPress = () => {
+        setIsDeleting(true)
+    }
+
+    const handleSelection = (index, value) => {
+        let tempData = data
+        tempData[index].isSelected=value
+        console.log(tempData.map(eachData=>eachData.isSelected))
+        setData(tempData)
+    }
+
+    const handleDeletion = () => {
+        let indexesOfItemsToBeDeleted = new Set()
+        data.forEach(eachDataItem=>{
+            if(!eachDataItem.isDefault && eachDataItem.isSelected)
+                indexesOfItemsToBeDeleted.add(eachDataItem.index)
+        })
+        console.log(indexesOfItemsToBeDeleted)
+
+        setCitiesDataList(currentList => currentList.filter((eachListItem,index)=>{
+            return !indexesOfItemsToBeDeleted.has(index)
+        }))
+        
+    }
+
     return (
         <View style={{flex:1}} >
+            {<LocationScreenHeader navigation={navigation} />}
+            {/*isDeleting && <DeleteSelectionHeader areAllSelected={areAllSelected}/>*/}
             <View style={styles.container}>
                 <FlatList
                     contentContainerStyle={{paddingBottom:10}}
                     showsVerticalScrollIndicator={false}
                     data={data}//data
-                    renderItem={({item})=><ListItem item={item} permissionStatus={permissionStatus} onPressedHandler={handlePressed}/>}
+                    renderItem={({item})=><ListItem
+                                            item={item}
+                                            permissionStatus={permissionStatus}
+                                            onPressedHandler={handlePressed}
+                                            onLongPressHandler={handleLongPress}
+                                            isDeleting={isDeleting}
+                                            selectionHandler={handleSelection}
+                                        />}
                     ItemSeparatorComponent={() => (
                         <View style={{ width: '100%', height: '0.5%', backgroundColor: 'grey' }} >
                         </View>
                     )}
-                    keyExtractor={(item)=>item.index.toString()}
+                    keyExtractor={(item)=>(item.index.toString()+item.isSelected.toString())}
                 />
                 
             </View>
-            <RefreshBar/>
+            <View style={{position:'absolute',bottom:0,width:'100%'}} >
+                <RefreshBar/>
+                {isDeleting && <DeleteFooter onPress={handleDeletion}/>}
+            </View>
         </View>
     )
 }
